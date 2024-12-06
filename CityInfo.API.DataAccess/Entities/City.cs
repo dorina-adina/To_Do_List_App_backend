@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using CityInfo.API.Businsess_Layer.Models;
 
 namespace CityInfo.API.Data_Access_Layer.Entities
 {
