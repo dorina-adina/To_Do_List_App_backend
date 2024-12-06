@@ -1,0 +1,6 @@
+@CityInfo.API.ceva_HostAddress = http://localhost:5019
+
+GET {{CityInfo.API.ceva_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
