@@ -13,6 +13,13 @@ namespace CityInfo.API.DB_Layer.DbContexts
         {
         }
 
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite("DbConnectionString");
+
+        //    base.OnConfiguring(optionsBuilder);
+        //}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -77,11 +84,6 @@ namespace CityInfo.API.DB_Layer.DbContexts
             base.OnModelCreating(modelBuilder);
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlite("connesctionstring");
-        //    base.OnConfiguring(optionsBuilder);
-        //}
 
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SQLitePCL;
 using static CityInfo.API.Presentation_Layer.Controllers.AuthenticationController;
 
 namespace CityInfo.API.Presentation_Layer.Controllers

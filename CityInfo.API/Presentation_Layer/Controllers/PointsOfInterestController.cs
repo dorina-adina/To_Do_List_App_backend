@@ -149,8 +149,8 @@ namespace CityInfo.API.Presentation_Layer.Controllers
 
             //city.PointsOfInterest.Add(finalPointOfInterest);
 
-            await _cityInfoRepository.AddPointOfInterestForCityAsync(cityId, finalPointOfInterest);
-            await _cityInfoRepository.SaveChangesAsync();
+            //*await _cityInfoRepository.AddPointOfInterestForCityAsync(cityId, finalPointOfInterest);
+            //*await _cityInfoRepository.SaveChangesAsync();
 
             var createdPointOfInterestToReturn = _mapper.Map<PointOfInterestDto>(finalPointOfInterest);
 

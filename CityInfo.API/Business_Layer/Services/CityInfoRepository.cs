@@ -15,7 +15,9 @@ namespace CityInfo.API.Businsess_Layer.Services
 
         public async Task<IEnumerable<City>> GetCitiesAsync()
         {
+            //return await _context.Cities.OrderBy(c => c.Name).ToListAsync();
             return await _context.Cities.OrderBy(c => c.Name).ToListAsync();
+
         }
 
         //public async Task<IEnumerable<City?>> GetCityAsync(string? name)

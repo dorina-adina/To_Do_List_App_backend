@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using Asp.Versioning;
 using AutoMapper;
+using CityInfo.API.Business_Layer.Models;
+using CityInfo.API.Business_Layer.Services;
 using CityInfo.API.Businsess_Layer.Models;
 using CityInfo.API.Businsess_Layer.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +23,8 @@ namespace CityInfo.API.Presentation_Layer.Controllers
         private readonly ICityInfoRepository _cityInfoRepository;
         private readonly IMapper _mapper;
         const int maxCitiesPageSize = 20;
+
+        //private readonly ToDoListRepo _toDoListRepo;
 
         //private readonly CitiesDataStore _citiesDataStore;
 
@@ -48,7 +52,20 @@ namespace CityInfo.API.Presentation_Layer.Controllers
                 throw new ArgumentNullException(nameof(cityInfoRepository));
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+
+            //_toDoListRepo = toDoListRepo ??
+            //    throw new ArgumentNullException(nameof(toDoListRepo));
         }
+
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<ToDoListDTO>>> GetLists()
+        //{
+        //    var listsEntities = await _toDoListRepo.GetListsAsync();
+
+        //    return Ok(_mapper.Map<IEnumerable<ToDoListDTO>>(listsEntities));
+
+       
+        //}
 
         //[HttpGet]
         //public async  Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(

@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using CityInfo.API;
+using CityInfo.API.Business_Layer.Services;
 using CityInfo.API.Businsess_Layer.Services;
 using CityInfo.API.DB_Layer.DbContexts;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -75,11 +76,23 @@ builder.Services.AddTransient<IMailService, CloudMailServices>();
 
 builder.Services.AddSingleton<CitiesDataStore>();
 
+
+
+
 builder.Services.AddDbContext<CityInfoContext>(DbContextOptions
     => DbContextOptions.UseSqlite(
         builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
 
+builder.Services.AddDbContext<ToDoListContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+
+
+
 builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
+
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
