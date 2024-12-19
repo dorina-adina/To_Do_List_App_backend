@@ -10,6 +10,8 @@ namespace CityInfo.API.Business_Layer.Profiles
         {
             CreateMap<ToDoList, ToDoListDTO>();
             CreateMap<ToDoListForInsertDTO, ToDoList>();
+            CreateMap<ToDoListForUpdateDTO, ToDoList>();
+            //CreateMap<ToDoList, ToDoListForUpdateDTO>();
 
         }
     }

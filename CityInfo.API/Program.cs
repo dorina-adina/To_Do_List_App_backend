@@ -85,7 +85,7 @@ builder.Services.AddDbContext<CityInfoContext>(DbContextOptions
 
 builder.Services.AddDbContext<ToDoListContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+        builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
 
 
 

@@ -1,4 +1,5 @@
-﻿using CityInfo.API.Data_Access_Layer.Entities;
+﻿using CityInfo.API.Business_Layer.Models;
+using CityInfo.API.Data_Access_Layer.Entities;
 
 namespace CityInfo.API.Business_Layer.Services
 {
@@ -10,9 +11,13 @@ namespace CityInfo.API.Business_Layer.Services
 
         Task<ToDoList> GetListAsync(int listaId);
 
-        void DeleteList(ToDoList lista);
+        //void UpdateList(ToDoListForUpdateDTO toDoList);
+
+        void DeleteList(int id);
 
         Task<bool> SaveChangesAsync();
+
+
 
 
     }

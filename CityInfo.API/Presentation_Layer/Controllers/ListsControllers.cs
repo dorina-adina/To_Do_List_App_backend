@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Presentation_Layer.Controllers
 {
+    //"DbConnectionString": "Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;UserId=sa;Password=BT.Cj#9628517;TrustedConnection=True;",
 
     [ApiController]
     //[Authorize]
@@ -39,11 +40,35 @@ namespace CityInfo.API.Presentation_Layer.Controllers
 
         }
 
+        [HttpGet("{ListId}", Name = "GetToDoList")]
+        public async Task<ActionResult<ToDoListDTO>> GetToDoList(
+            int ListId)
+        {
+
+            //if (!await _toDoListRepo.ListExistsAsync(Id))
+            //{
+
+            //    return NotFound();
+            //}
+
+
+
+            var toDoList = await _toDoListRepo
+                .GetListAsync(ListId);
+
+            if (toDoList == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<ToDoListDTO>(toDoList));
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<ToDoListDTO>> InsertToDoList(
             ToDoListForInsertDTO toDoList)
         {
-            // nu merge :'(
             var finalToDoList = _mapper.Map<ToDoList>(toDoList);
 
             var createdToDoList = _mapper.Map<ToDoListDTO>(finalToDoList);
@@ -51,20 +76,46 @@ namespace CityInfo.API.Presentation_Layer.Controllers
             return CreatedAtRoute("GetToDoList",
                  new
                  {
-                     toDoListId = finalToDoList.Id + 1
+                     ListId = finalToDoList.Id
                  },
                  createdToDoList);
+
         }
 
-        //[HttpPut("{todolistId}")]
-        //public async Task<ActionResult> UpdateToDoList (int todolistId,
-        //    ToDoListForUpdateDTO toDoList)
-        //{
+        [HttpPut("{Id}")]
+        public async Task<ActionResult> UpdateToDoList(int Id,
+            ToDoListForUpdateDTO toDoList)
+        {
+            //if (!await _cityInfoRepository.CityExistsAsync(cityId))
+            //{
 
-        //}
+            //    return NotFound();
+            //}
+            var toDoListEntity = await _toDoListRepo.GetListAsync(Id);
 
-        [HttpDelete("{todolistId}")]
-        public async Task<ActionResult> DeleteToDoList(int todolistId)
+            if (toDoListEntity == null)
+            {
+                return NotFound();
+            }
+
+            //toDoList.Id = Id;
+            //toDoListEntity.Priority = toDoList.Priority;
+            //toDoListEntity.CreatedBy = toDoList.Createdby;
+
+
+            _mapper.Map(toDoList, toDoListEntity);
+
+            //_toDoListRepo.UpdateList(toDoList);
+
+
+            await _toDoListRepo.SaveChangesAsync();
+
+
+            return NoContent();
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult> DeleteToDoList(int Id)
         {
             //if (!await _toDoListRepo.ListExistsAsync(todolistId))
             //{
@@ -72,18 +123,20 @@ namespace CityInfo.API.Presentation_Layer.Controllers
             //    return NotFound();
             //}
 
-            var listaa = await _toDoListRepo.GetListAsync(todolistId);
+            //var listEntity = await _toDoListRepo.GetListAsync(Id);
 
-            if (listaa == null)
-            {
-                return NotFound();
-            }
+            //if (listEntity == null)
+            //{
+            //    return NotFound();
+            //}
 
-            _toDoListRepo.DeleteList(listaa);
+            _toDoListRepo.DeleteList(Id);
             await _toDoListRepo.SaveChangesAsync();
 
-            return NoContent;
+            return NoContent();
         }
+
+       
 
     }
 }
