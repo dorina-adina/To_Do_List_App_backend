@@ -1,7 +1,12 @@
-﻿namespace CityInfo.API.Data_Access_Layer.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CityInfo.API.Data_Access_Layer.Entities
 {
     public class ToDoList
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Task { get; set; }
         public short Priority { get; set; }

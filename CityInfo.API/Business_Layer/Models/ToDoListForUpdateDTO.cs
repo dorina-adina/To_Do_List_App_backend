@@ -1,4 +1,6 @@
-﻿namespace CityInfo.API.Business_Layer.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CityInfo.API.Business_Layer.Models
 {
     public class ToDoListForUpdateDTO
     {

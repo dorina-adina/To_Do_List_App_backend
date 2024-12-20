@@ -25,7 +25,7 @@ namespace CityInfo.API.Business_Layer.Services
 
         public async Task<bool> ListExistsAsync(int listaId)
         {
-            var result = await _context.Database.SqlQueryRaw<ToDoList>(@"SELECT * FROM ToDoList WHERE Id = $listaId").AnyAsync();
+            var result = await _context.Database.SqlQueryRaw<ToDoList>("SELECT * FROM ToDoList WHERE Id = listaId").AnyAsync();
 
             return result;
         }
@@ -42,11 +42,16 @@ namespace CityInfo.API.Business_Layer.Services
             return await _context.SaveChangesAsync() >= 0;
         }
 
-        //public void UpdateList(ToDoListForUpdateDTO list)
-        //{
-        //    _context.Database.ExecuteSqlRaw("UPDATE ToDoList SET Task =" + @list.Task + "WHERE Id =" + @list.Id);
+        public void AddList(ToDoListForInsertDTO toDoList)
+        {
+            _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy) VALUES (" + "'" + @toDoList.Task + "'" + "," + @toDoList.Priority +"," + "'" + @toDoList.Createdby + "'" + ")");
+        }
 
-        //}
+        public void UpdateList(int id, ToDoListForUpdateDTO list)
+        {
+            _context.Database.ExecuteSqlRaw("UPDATE ToDoList SET Task =" + "'" + @list.Task + "'" + "," + "Priority =" + @list.Priority + "," + "Createdby =" + "'" + @list.Createdby + "'" + "WHERE Id =" + @id);
+
+        }
 
         public void DeleteList(int id)
         {

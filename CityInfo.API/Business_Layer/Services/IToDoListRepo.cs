@@ -10,8 +10,9 @@ namespace CityInfo.API.Business_Layer.Services
         Task<bool> ListExistsAsync(int listaId);
 
         Task<ToDoList> GetListAsync(int listaId);
+        void AddList(ToDoListForInsertDTO toDoList);
 
-        //void UpdateList(ToDoListForUpdateDTO toDoList);
+        void UpdateList(int id, ToDoListForUpdateDTO toDoList);
 
         void DeleteList(int id);
 

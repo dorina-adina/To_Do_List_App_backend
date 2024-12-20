@@ -69,16 +69,24 @@ namespace CityInfo.API.Presentation_Layer.Controllers
         public async Task<ActionResult<ToDoListDTO>> InsertToDoList(
             ToDoListForInsertDTO toDoList)
         {
-            var finalToDoList = _mapper.Map<ToDoList>(toDoList);
+            _toDoListRepo.AddList(toDoList);
 
-            var createdToDoList = _mapper.Map<ToDoListDTO>(finalToDoList);
+            //var finalToDoList = _mapper.Map<ToDoList>(toDoList);
 
-            return CreatedAtRoute("GetToDoList",
-                 new
-                 {
-                     ListId = finalToDoList.Id
-                 },
-                 createdToDoList);
+            //var createdToDoList = _mapper.Map<ToDoListDTO>(finalToDoList);
+
+
+            //return CreatedAtRoute("GetToDoList",
+            //     new
+            //     {
+            //         ListId = finalToDoList.Id
+            //     },
+            //     createdToDoList);
+
+
+            await _toDoListRepo.SaveChangesAsync();
+
+            return NoContent();
 
         }
 
@@ -102,8 +110,10 @@ namespace CityInfo.API.Presentation_Layer.Controllers
             //toDoListEntity.Priority = toDoList.Priority;
             //toDoListEntity.CreatedBy = toDoList.Createdby;
 
+            _toDoListRepo.UpdateList(Id, toDoList);
 
-            _mapper.Map(toDoList, toDoListEntity);
+
+            //_mapper.Map(toDoList, toDoListEntity);
 
             //_toDoListRepo.UpdateList(toDoList);
 
