@@ -4,6 +4,9 @@ using CityInfo.API.Business_Layer.Models;
 using CityInfo.API.Business_Layer.Services;
 using CityInfo.API.Data_Access_Layer.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.EntityFrameworkCore;
+
 
 
 namespace CityInfo.API.Presentation_Layer.Controllers
@@ -71,6 +74,9 @@ namespace CityInfo.API.Presentation_Layer.Controllers
         {
             var finalToDoList = _mapper.Map<ToDoList>(toDoList);
 
+            //_toDoListRepo.AddList(finalToDoList);
+            //await _toDoListRepo.SaveChangesAsync();
+
             var createdToDoList = _mapper.Map<ToDoListDTO>(finalToDoList);
 
             return CreatedAtRoute("GetToDoList",
@@ -86,11 +92,6 @@ namespace CityInfo.API.Presentation_Layer.Controllers
         public async Task<ActionResult> UpdateToDoList(int Id,
             ToDoListForUpdateDTO toDoList)
         {
-            //if (!await _cityInfoRepository.CityExistsAsync(cityId))
-            //{
-
-            //    return NotFound();
-            //}
             var toDoListEntity = await _toDoListRepo.GetListAsync(Id);
 
             if (toDoListEntity == null)
@@ -98,18 +99,9 @@ namespace CityInfo.API.Presentation_Layer.Controllers
                 return NotFound();
             }
 
-            //toDoList.Id = Id;
-            //toDoListEntity.Priority = toDoList.Priority;
-            //toDoListEntity.CreatedBy = toDoList.Createdby;
-
-
             _mapper.Map(toDoList, toDoListEntity);
 
-            //_toDoListRepo.UpdateList(toDoList);
-
-
             await _toDoListRepo.SaveChangesAsync();
-
 
             return NoContent();
         }

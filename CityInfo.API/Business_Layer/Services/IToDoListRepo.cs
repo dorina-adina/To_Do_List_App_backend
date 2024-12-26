@@ -11,6 +11,8 @@ namespace CityInfo.API.Business_Layer.Services
 
         Task<ToDoList> GetListAsync(int listaId);
 
+        //void AddList(ToDoList toDoList);
+
         //void UpdateList(ToDoListForUpdateDTO toDoList);
 
         void DeleteList(int id);

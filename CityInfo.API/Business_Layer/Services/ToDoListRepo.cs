@@ -37,16 +37,20 @@ namespace CityInfo.API.Business_Layer.Services
             return result;
         }
 
+
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() >= 0;
         }
 
-        //public void UpdateList(ToDoListForUpdateDTO list)
+        //public void AddList(ToDoList toDoList)
         //{
-        //    _context.Database.ExecuteSqlRaw("UPDATE ToDoList SET Task =" + @list.Task + "WHERE Id =" + @list.Id);
+        //    var task = toDoList.Task;
+        //    _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy) VALUES (" + @task + "," + @toDoList.Priority + "," + @toDoList.CreatedBy + ")");
 
         //}
+
+
 
         public void DeleteList(int id)
         {
@@ -59,7 +63,7 @@ namespace CityInfo.API.Business_Layer.Services
             //SET @Id = id;
 
 
-            _context.Database.ExecuteSqlRaw("DELETE FROM ToDoList WHERE Id =" + @id);
+            _context.Database.ExecuteSqlRaw("DELETE FROM ToDoList WHERE Id = " + @id);
 
             //_context.<ToDoList>.Where(l => l.Id == id).ExecuteDelete();
         }
