@@ -43,6 +43,7 @@ namespace CityInfo.API.Business_Layer.Services
             return await _context.SaveChangesAsync() >= 0;
         }
 
+
         public void AddList(ToDoListForInsertDTO toDoList)
         {
             _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy) VALUES (" + "'" + @toDoList.Task + "'" + "," + @toDoList.Priority +"," + "'" + @toDoList.Createdby + "'" + ")");
