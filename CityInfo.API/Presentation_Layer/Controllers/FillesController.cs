@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace CityInfo.API.Presentation_Layer.Controllers
+namespace ToDoList.API.Presentation_Layer.Controllers
 {
     [Route("api/v{version:apiVersion}/files")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace CityInfo.API.Presentation_Layer.Controllers
         }
 
         [HttpGet("{fileId}")]
-        [ApiVersion(0.1, Deprecated = true)]
+        [Asp.Versioning.ApiVersion(0.1, Deprecated = true)]
         public ActionResult GetFile(string fileId)
         {
             // demo code

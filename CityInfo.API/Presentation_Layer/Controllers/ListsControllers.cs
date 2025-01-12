@@ -1,15 +1,11 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfo.API.Business_Layer.Models;
-using CityInfo.API.Business_Layer.Services;
-using CityInfo.API.Data_Access_Layer.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
+using ToDoList.API.BusinessLayer.Models;
+using ToDoList.API.Data_AccessLayer.Services;
 
 
-
-namespace CityInfo.API.Presentation_Layer.Controllers
+namespace ToDoList.API.Presentation_Layer.Controllers
 {
     //"DbConnectionString": "Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;UserId=sa;Password=BT.Cj#9628517;TrustedConnection=True;",
 
@@ -17,7 +13,7 @@ namespace CityInfo.API.Presentation_Layer.Controllers
     //[Authorize]
     [Route("api/v{version:apiVersion}/lists")]
     //[Route("api/[controller]")]
-    [ApiVersion(3)]
+    [Asp.Versioning.ApiVersion(3)]
 
 
     public class ListsControllers : ControllerBase
@@ -97,6 +93,11 @@ namespace CityInfo.API.Presentation_Layer.Controllers
         public async Task<ActionResult> UpdateToDoList(int Id,
             ToDoListForUpdateDTO toDoList)
         {
+            //if (!await _cityInfoRepository.CityExistsAsync(cityId))
+            //{
+
+            //    return NotFound();
+            //}
             var toDoListEntity = await _toDoListRepo.GetListAsync(Id);
 
             if (toDoListEntity == null)
@@ -113,7 +114,11 @@ namespace CityInfo.API.Presentation_Layer.Controllers
 
             //_mapper.Map(toDoList, toDoListEntity);
 
+            //_toDoListRepo.UpdateList(toDoList);
+
+
             await _toDoListRepo.SaveChangesAsync();
+
 
             return NoContent();
         }
@@ -140,7 +145,7 @@ namespace CityInfo.API.Presentation_Layer.Controllers
             return NoContent();
         }
 
-       
+
 
     }
 }

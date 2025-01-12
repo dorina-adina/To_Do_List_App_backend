@@ -1,13 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using CityInfo.API.Data_Access_Layer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using static CityInfo.API.Presentation_Layer.Controllers.AuthenticationController;
+using static ToDoList.API.Presentation_Layer.Controllers.AuthenticationController;
 
-namespace CityInfo.API.Presentation_Layer.Controllers
+namespace ToDoList.API.Presentation_Layer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

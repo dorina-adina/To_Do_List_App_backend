@@ -1,18 +1,17 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using CityInfo.API;
-using CityInfo.API.Business_Layer.Services;
-using CityInfo.API.Businsess_Layer.Services;
-using CityInfo.API.DB_Layer.DbContexts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text;
-
+using ToDoList.API.Data_AccessLayer.Services;
+using ToDoList.API.DBLayer.DbContexts;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -21,11 +20,8 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.Logging.ClearProviders();
-//builder.Logging.AddConsole();
 builder.Host.UseSerilog();
 
-// Add services to the container.
 
 builder.Services.AddControllers(options =>
 {
@@ -34,33 +30,6 @@ builder.Services.AddControllers(options =>
 .AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddProblemDetails();
-
-
-//builder.Services.AddControllers(options =>
-//{
-//    options.ReturnHttpNotAcceptable = true;
-//}).AddXmlDataContractSerializerFormatters();
-
-
-//builder.Services.AddProblemDetails(options =>
-//{
-//    options.CustomizeProblemDetails = ctx =>
-//    {
-//        ctx.ProblemDetails.Extensions.Add("additionalInfo", "Additional Info Example");
-//        ctx.ProblemDetails.Extensions.Add("server", Environment.MachineName); 
-//    };
-//});
-
-//builder.Services.AddProblemDetails(options =>
-//{
-//    options.CustomizeProblemDetails = ctx =>
-//    {
-//        ctx.ProblemDetails.Extensions.Add("additionalInfo",
-//            "Additional info example");
-//        ctx.ProblemDetails.Extensions.Add("server", 
-//            Environment.MachineName);
-//    };
-//});
 
 // Learn more about configuring Swagger/OpenAPI at
 // https://aka.ms/aspnetcore/swashbuckle
@@ -74,24 +43,12 @@ builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddTransient<IMailService, CloudMailServices>();
 #endif
 
-builder.Services.AddSingleton<CitiesDataStore>();
-
-
-
-
-builder.Services.AddDbContext<CityInfoContext>(DbContextOptions
-    => DbContextOptions.UseSqlite(
-        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
-
 builder.Services.AddDbContext<ToDoListContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+//builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+ builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
 
-
-
-builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
-
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -143,9 +100,9 @@ builder.Services.AddSwaggerGen(setupAction =>
             $"{description.GroupName}",
             new()
             {
-                Title = "City Info API",
+                Title = "To-Do List API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Through this API you can access cities and their points of interest."
+                Description = "Through this API you can access yours to-do lists."
             });
     }
 
@@ -183,7 +140,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
-//Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler();
@@ -220,45 +176,3 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
-
-
-
-
-
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Add services to the container.
-
-//builder.Services.AddControllers();
-//// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
-
-
-//app.UseHttpsRedirection();
-
-//app.UseRouting();
-
-//app.UseAuthorization();
-
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapControllers();
-//});
-
-////app.Run(async (context) =>
-////{
-////    await context.Response.WriteAsync("Hello World!");
-////});
-
-
-//app.Run();
