@@ -13,9 +13,5 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
   </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\ToDoList.API.Data_AccessLayer\ToDoList.API.Data_AccessLayer.csproj" />
-	</ItemGroup>
-
   
 </Project>

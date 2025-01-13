@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToDoList.API.BusinessLayer\ToDoList.API.BusinessLayer.csproj" />
-	<ProjectReference Include="..\ToDoList.API.Data_AccessLayer\ToDoList.API.Data_AccessLayer.csproj" />
 	<ProjectReference Include="..\ToDoList.API.DBLayer\ToDoList.API.DBLayer.csproj" />
 
   </ItemGroup>
