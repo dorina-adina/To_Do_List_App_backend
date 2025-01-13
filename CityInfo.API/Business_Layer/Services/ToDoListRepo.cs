@@ -46,7 +46,7 @@ namespace CityInfo.API.Business_Layer.Services
 
         public void AddList(ToDoListForInsertDTO toDoList)
         {
-            _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy) VALUES (" + "'" + @toDoList.Task + "'" + "," + @toDoList.Priority +"," + "'" + @toDoList.Createdby + "'" + ")");
+            _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy) VALUES (" + "'" + @toDoList.Task + "'" + "," + @toDoList.Priority +"," + "'" + @toDoList.CreatedBy + "'" + ")");
         }
 
         public void UpdateList(int id, ToDoListForUpdateDTO list)
