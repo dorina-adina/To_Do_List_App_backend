@@ -1,4 +1,6 @@
-﻿namespace CityInfo.API.Businsess_Layer.Services
+﻿using Microsoft.Extensions.Configuration;
+
+namespace ToDoListInfo.API.Data_AccessLayer.Services
 {
     public class LocalMailService : IMailService
     {

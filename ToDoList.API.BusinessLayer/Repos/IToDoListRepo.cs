@@ -1,14 +1,14 @@
-﻿using ToDoList.API.Business_Layer.Models;
+﻿using ToDoListInfo.API.BusinessLayer.Models;
 
-namespace ToDoList.Api.DataAccess_Layer.Services
+namespace ToDoListInfo.API.BusinessLayer.Repos
 {
     public interface IToDoListRepo
     {
-        Task<IEnumerable<ToDoList>> GetListsAsync();
+        Task<IEnumerable<ToDoListDTO>> GetListsAsync();
 
         Task<bool> ListExistsAsync(int listaId);
 
-        Task<ToDoList> GetListAsync(int listaId);
+        Task<ToDoListDTO> GetListAsync(int listaId);
         void AddList(ToDoListForInsertDTO toDoList);
 
         void UpdateList(int id, ToDoListForUpdateDTO toDoList);

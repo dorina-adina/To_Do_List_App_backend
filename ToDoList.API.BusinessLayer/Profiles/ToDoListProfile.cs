@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
-using ToDoList.API.BusinessLayer.Models;
+using ToDoListInfo.API.BusinessLayer.Models;
+using ToDoListInfo.API.Data_AccessLayer.Entities;
 
-namespace ToDoList.API.BusinessLayer.Profiles
+namespace ToDoListInfo.API.BusinessLayer.Profiles
 {
     public class ToDoListProfile : Profile
     {
         public ToDoListProfile()
         {
-            CreateMap<Data_AccessLayer.Entities.ToDoList, ToDoListDTO>();
-            CreateMap<ToDoListForInsertDTO, Data_AccessLayer.Entities.ToDoList>();
-            CreateMap<ToDoListForUpdateDTO, Data_AccessLayer.Entities.ToDoList>();
-            CreateMap<Data_AccessLayer.Entities.ToDoList, ToDoListForUpdateDTO>();
+            CreateMap<ToDoList, ToDoListDTO>();
+            CreateMap<ToDoListForInsertDTO, ToDoList>();
+            CreateMap<ToDoListForUpdateDTO, ToDoList>();
+            CreateMap<ToDoList, ToDoListForUpdateDTO>();
 
         }
     }

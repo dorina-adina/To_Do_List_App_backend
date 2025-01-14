@@ -1,23 +1,21 @@
-﻿using Asp.Versioning.Conventions;
-using ToDoList.API.Business_Layer.Models;
-using ToDoList.Api.DataAccess_Layer.Entities;
-using ToDoList.Api.DB_Layer.DbContexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using ToDoListInfo.API.BusinessLayer.Models;
+using ToDoListInfo.API.DBLayer.DbContexts;
 
-namespace ToDoList.API.DataAccess_Layer.Services
+namespace ToDoListInfo.API.BusinessLayer.Repos
 {
     public class ToDoListRepo : IToDoListRepo
     {
-        private readonly ToDoListContext _context;
+        private readonly ToDoListInfoContext _context;
 
-        public ToDoListRepo(ToDoListContext context)
+        public ToDoListRepo(ToDoListInfoContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IEnumerable<ToDoList>> GetListsAsync()
+        public async Task<IEnumerable<ToDoListDTO>> GetListsAsync()
         {
-            var result = await _context.Database.SqlQueryRaw<ToDoList>("SELECT * FROM ToDoList").ToListAsync();
+            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList").ToListAsync();
 
             return result;
 
@@ -25,14 +23,14 @@ namespace ToDoList.API.DataAccess_Layer.Services
 
         public async Task<bool> ListExistsAsync(int listaId)
         {
-            var result = await _context.Database.SqlQueryRaw<ToDoList>("SELECT * FROM ToDoList WHERE Id = listaId").AnyAsync();
+            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE Id = listaId").AnyAsync();
 
             return result;
         }
 
-        public async Task<ToDoList> GetListAsync(int listaId)
+        public async Task<ToDoListDTO> GetListAsync(int listaId)
         {
-            var result = await _context.Database.SqlQueryRaw<ToDoList>("SELECT * FROM ToDoList WHERE Id = " + listaId).FirstOrDefaultAsync();
+            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE Id = " + listaId).FirstOrDefaultAsync();
 
             return result;
         }

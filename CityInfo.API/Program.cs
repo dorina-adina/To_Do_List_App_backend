@@ -1,6 +1,6 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
-using CityInfo.API;
+using ToDoList.API;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +10,10 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text;
-using ToDoList.API.Data_AccessLayer.Services;
-using ToDoList.API.DBLayer.DbContexts;
+using Microsoft.AspNetCore.SignalR;
+using ToDoListInfo.API.Data_AccessLayer.Services;
+using ToDoListInfo.API.DBLayer.DbContexts;
+using ToDoListInfo.API.BusinessLayer.Repos;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -21,7 +23,6 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
-
 
 builder.Services.AddControllers(options =>
 {
@@ -43,10 +44,10 @@ builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddTransient<IMailService, CloudMailServices>();
 #endif
 
-builder.Services.AddDbContext<ToDoListContext>(options =>
+builder.Services.AddDbContext<ToDoListInfoContext>(options =>
     options.UseSqlServer(
 //builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
- builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+ builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
 
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
 

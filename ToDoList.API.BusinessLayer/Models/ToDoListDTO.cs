@@ -1,4 +1,4 @@
-﻿namespace ToDoList.API.BusinessLayer.Models
+﻿namespace ToDoListInfo.API.BusinessLayer.Models
 {
     public class ToDoListDTO
     {

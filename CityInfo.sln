@@ -3,16 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.API", "CityInfo.API\ToDoList.API.csproj", "{5450EDC4-6468-4FC9-A84C-6806EDB893CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfo.API", "CityInfo.API\CityInfo.API.csproj", "{5450EDC4-6468-4FC9-A84C-6806EDB893CE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7D1C62F2-2424-4D09-B5CF-3A14335F58C5} = {7D1C62F2-2424-4D09-B5CF-3A14335F58C5}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.API.BusinessLayer", "ToDoList.API.BusinessLayer\ToDoList.API.BusinessLayer.csproj", "{B61CC728-2418-44CA-AD62-1C01516BEDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoListInfo.API.BusinessLayer", "ToDoList.API.BusinessLayer\ToDoListInfo.API.BusinessLayer.csproj", "{B61CC728-2418-44CA-AD62-1C01516BEDE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.API.DBLayer", "ToDoList.API.DBLayer\ToDoList.API.DBLayer.csproj", "{7D1C62F2-2424-4D09-B5CF-3A14335F58C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoListInfo.API.DBLayer", "ToDoList.API.DBLayer\ToDoListInfo.API.DBLayer.csproj", "{7D1C62F2-2424-4D09-B5CF-3A14335F58C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoList.API.Data_AccessLayer", "ToDoList.API.Data_AccessLayer\ToDoList.API.Data_AccessLayer.csproj", "{DF34BCDD-3DCE-4A2B-9C73-DC2A5D3930B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoListInfo.API.Data_AccessLayer", "ToDoList.API.Data_AccessLayer\ToDoListInfo.API.Data_AccessLayer.csproj", "{DF34BCDD-3DCE-4A2B-9C73-DC2A5D3930B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.API", "CityInfo.API\ToDoList.API.csproj", "{B913FD09-B825-4502-8BB2-6713CF0DA5F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{DF34BCDD-3DCE-4A2B-9C73-DC2A5D3930B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF34BCDD-3DCE-4A2B-9C73-DC2A5D3930B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF34BCDD-3DCE-4A2B-9C73-DC2A5D3930B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B913FD09-B825-4502-8BB2-6713CF0DA5F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B913FD09-B825-4502-8BB2-6713CF0DA5F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B913FD09-B825-4502-8BB2-6713CF0DA5F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B913FD09-B825-4502-8BB2-6713CF0DA5F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoList.API.BusinessLayer.Models
+namespace ToDoListInfo.API.BusinessLayer.Models
 {
     public class ToDoListForInsertDTO
     {

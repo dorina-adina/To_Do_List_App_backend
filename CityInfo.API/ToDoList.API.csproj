@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>Cityinfo.API.xml</DocumentationFile>
+    <DocumentationFile>ToDoList.API.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
-    <PackageReference Include="microsoft.entityframeworkcore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
@@ -32,9 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToDoList.API.BusinessLayer\ToDoList.API.BusinessLayer.csproj" />
-	<ProjectReference Include="..\ToDoList.API.DBLayer\ToDoList.API.DBLayer.csproj" />
-
+    <ProjectReference Include="..\ToDoList.API.BusinessLayer\ToDoListInfo.API.BusinessLayer.csproj" />
   </ItemGroup>
 
 

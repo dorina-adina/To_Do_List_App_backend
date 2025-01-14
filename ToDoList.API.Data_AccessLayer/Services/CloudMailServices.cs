@@ -1,4 +1,4 @@
-﻿namespace CityInfo.API.Businsess_Layer.Services
+﻿namespace ToDoListInfo.API.Data_AccessLayer.Services
 {
     public class CloudMailServices : IMailService
     {
