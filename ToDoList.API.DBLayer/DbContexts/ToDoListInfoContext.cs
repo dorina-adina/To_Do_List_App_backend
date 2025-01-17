@@ -8,6 +8,7 @@ namespace ToDoListInfo.API.DBLayer.DbContexts
     {
         public DbSet<ToDoList> ToDoLists { get; set; }
         public DbSet<Priorities> Priorities { get; set; }
+        public DbSet<Upload> Upload { get; set; }
 
         public ToDoListInfoContext(DbContextOptions<ToDoListInfoContext> options)
             : base(options)
