@@ -53,18 +53,8 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         public void DeleteList(int id)
         {
-            //var columnId = new SqlParameter("columnId", "https://7175");
-
-            //_context.Database.SqlQueryRaw<ToDoList>($"DELETE FROM ToDoList WHERE Id = $id");
-
-            //DECLARE @Id int
-
-            //SET @Id = id;
-
-
             _context.Database.ExecuteSqlRaw("DELETE FROM ToDoList WHERE Id =" + @id);
 
-            //_context.<ToDoList>.Where(l => l.Id == id).ExecuteDelete();
         }
 
 

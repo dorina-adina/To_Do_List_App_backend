@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ToDoListInfo.API.Data_AccessLayer.Entities
 {
@@ -10,6 +11,7 @@ namespace ToDoListInfo.API.Data_AccessLayer.Entities
         public int Id { get; set; }
         public string Task { get; set; }
 
+        [ForeignKey("Priority")]
         public short Priority { get; set; }
 
         public string? CreatedBy { get; set; }

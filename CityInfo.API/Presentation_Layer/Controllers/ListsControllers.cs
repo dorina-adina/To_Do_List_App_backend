@@ -1,4 +1,5 @@
-﻿using Asp.Versioning;
+﻿using System.Collections.Generic;
+using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -46,14 +47,6 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             int ListId)
         {
 
-            //if (!await _toDoListRepo.ListExistsAsync(Id))
-            //{
-
-            //    return NotFound();
-            //}
-
-
-
             var toDoList = await _toDoListRepo
                 .GetListAsync(ListId);
 
@@ -69,20 +62,13 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDoListDTO>> InsertToDoList(ToDoListForInsertDTO toDoList)
         {
+        
+            if (toDoList == null)
+            {
+                return NotFound();
+            }
+
             _toDoListRepo.AddList(toDoList);
-
-            //var finalToDoList = _mapper.Map<ToDoList>(toDoList);
-
-            //var createdToDoList = _mapper.Map<ToDoListDTO>(finalToDoList);
-
-
-            //return CreatedAtRoute("GetToDoList",
-            //     new
-            //     {
-            //         ListId = finalToDoList.Id
-            //     },
-            //     createdToDoList);
-
 
             await _toDoListRepo.SaveChangesAsync();
 
@@ -94,11 +80,6 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         public async Task<ActionResult> UpdateToDoList(int Id,
             ToDoListForUpdateDTO toDoList)
         {
-            //if (!await _cityInfoRepository.CityExistsAsync(cityId))
-            //{
-
-            //    return NotFound();
-            //}
             var toDoListEntity = await _toDoListRepo.GetListAsync(Id);
 
             if (toDoListEntity == null)
@@ -106,20 +87,9 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 return NotFound();
             }
 
-            //toDoList.Id = Id;
-            //toDoListEntity.Priority = toDoList.Priority;
-            //toDoListEntity.CreatedBy = toDoList.Createdby;
-
             _toDoListRepo.UpdateList(Id, toDoList);
 
-
-            //_mapper.Map(toDoList, toDoListEntity);
-
-            //_toDoListRepo.UpdateList(toDoList);
-
-
             await _toDoListRepo.SaveChangesAsync();
-
 
             return NoContent();
         }
@@ -127,19 +97,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteToDoList(int Id)
         {
-            //if (!await _toDoListRepo.ListExistsAsync(todolistId))
-            //{
-
-            //    return NotFound();
-            //}
-
-            //var listEntity = await _toDoListRepo.GetListAsync(Id);
-
-            //if (listEntity == null)
-            //{
-            //    return NotFound();
-            //}
-
+            
             _toDoListRepo.DeleteList(Id);
             await _toDoListRepo.SaveChangesAsync();
 
