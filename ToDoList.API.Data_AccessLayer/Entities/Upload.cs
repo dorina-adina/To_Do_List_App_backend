@@ -13,6 +13,7 @@ namespace ToDoListInfo.API.Data_AccessLayer.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Link { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
     }
 }

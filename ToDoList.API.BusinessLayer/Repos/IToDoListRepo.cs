@@ -17,6 +17,8 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         Task<bool> SaveChangesAsync();
 
+        void AddFile(UploadDTO file);
+
 
 
 

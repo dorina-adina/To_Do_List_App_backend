@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using ToDoListInfo.API.BusinessLayer.Models;
 using ToDoListInfo.API.BusinessLayer.Repos;
+using ToDoListInfo.API.Data_AccessLayer.Entities;
 using ToDoListInfo.API.Data_AccessLayer.Services;
 
 
@@ -104,6 +105,21 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             return NoContent();
         }
 
+        //[HttpPost]
+        //public async Task<ActionResult> Upload(UploadDTO file)
+        //{
+        //    if (file == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _toDoListRepo.AddFile(file);
+
+        //    await _toDoListRepo.SaveChangesAsync();
+
+        //    return NoContent();
+
+        //}
 
 
     }

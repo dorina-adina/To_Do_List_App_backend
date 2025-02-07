@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDoListInfo.API.BusinessLayer.Models;
+using ToDoListInfo.API.Data_AccessLayer.Entities;
 using ToDoListInfo.API.DBLayer.DbContexts;
 
 namespace ToDoListInfo.API.BusinessLayer.Repos
@@ -57,6 +58,9 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         }
 
-
+        public void AddFile(UploadDTO file)
+        {
+            _context.Database.ExecuteSqlRaw("INSERT INTO Upload (Name, Path, CreatedDate) VALUES (" + "'" + @file.Name + "'" + "," + @file.Path + "," + "'" + @file.CreatedDate + "'" + ")");
+        }
     }
 }
