@@ -1,4 +1,5 @@
 ﻿using ToDoListInfo.API.BusinessLayer.Models;
+using ToDoListInfo.API.Data_AccessLayer.Entities;
 
 namespace ToDoListInfo.API.BusinessLayer.Repos
 {
@@ -17,7 +18,8 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         Task<bool> SaveChangesAsync();
 
-        void AddFile(UploadDTO file);
+        Task<Upload> AddFileAsync(string fileName, string filePath);
+
 
 
 

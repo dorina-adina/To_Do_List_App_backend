@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ToDoListInfo.API.BusinessLayer.Models;
 using ToDoListInfo.API.BusinessLayer.Repos;
@@ -25,13 +26,17 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         private readonly IToDoListRepo _toDoListRepo;
         private readonly IMapper _mapper;
+        private readonly ILogger<ListsControllers> _logger;
 
-        public ListsControllers(IToDoListRepo toDoListRepo, IMapper mapper)
+
+        public ListsControllers(IToDoListRepo toDoListRepo, IMapper mapper, ILogger<ListsControllers> logger)
         {
             _toDoListRepo = toDoListRepo ??
                 throw new ArgumentNullException(nameof(toDoListRepo));
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+            _logger = logger ??
+                throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpGet]
@@ -63,7 +68,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDoListDTO>> InsertToDoList(ToDoListForInsertDTO toDoList)
         {
-        
+
             if (toDoList == null)
             {
                 return NotFound();
@@ -98,29 +103,37 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteToDoList(int Id)
         {
-            
+
             _toDoListRepo.DeleteList(Id);
             await _toDoListRepo.SaveChangesAsync();
 
             return NoContent();
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Upload(UploadDTO file)
-        //{
-        //    if (file == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    _toDoListRepo.AddFile(file);
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0 || file.Length > 20971520)
+            {
+                return BadRequest("No file uploaded.");
+            }
 
-        //    await _toDoListRepo.SaveChangesAsync();
+            var fileName = Path.GetFileName(file.FileName);
+            var filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                $"_{fileName}");
 
-        //    return NoContent();
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
 
-        //}
+            var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath);
 
+            _logger.LogInformation("File {FileName} was uploaded succesfully!", fileName);
 
+            return Ok(new { fileUpload.Name, fileUpload.Path });
+        }
     }
 }

@@ -57,10 +57,21 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
             _context.Database.ExecuteSqlRaw("DELETE FROM ToDoList WHERE Id =" + @id);
 
         }
+ 
 
-        public void AddFile(UploadDTO file)
+        public async Task<Upload> AddFileAsync(string fileName, string filePath)
         {
-            _context.Database.ExecuteSqlRaw("INSERT INTO Upload (Name, Path, CreatedDate) VALUES (" + "'" + @file.Name + "'" + "," + @file.Path + "," + "'" + @file.CreatedDate + "'" + ")");
+            var fileUpload = new Upload
+            {
+                Name = fileName,
+                Path = filePath,
+                CreatedDate = DateTime.Now
+            };
+
+            _context.Upload.Add(fileUpload);
+            await _context.SaveChangesAsync();
+
+            return fileUpload;
         }
     }
 }
