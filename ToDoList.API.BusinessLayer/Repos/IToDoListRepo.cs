@@ -10,6 +10,10 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
         Task<bool> ListExistsAsync(int listaId);
 
         Task<ToDoListDTO> GetListAsync(int listaId);
+
+        Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(string owner);
+
+
         void AddList(ToDoListForInsertDTO toDoList);
 
         void UpdateList(int id, ToDoListForUpdateDTO toDoList);

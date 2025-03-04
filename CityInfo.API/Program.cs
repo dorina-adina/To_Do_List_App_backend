@@ -52,6 +52,17 @@ builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
 
 
+
+builder.Services.AddDbContext<UserInfoContext>(options =>
+    options.UseSqlServer(
+//builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
+
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+
+
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>

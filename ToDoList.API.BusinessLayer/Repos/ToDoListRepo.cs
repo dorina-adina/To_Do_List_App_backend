@@ -36,6 +36,13 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
             return result;
         }
 
+        public async Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(string owner)
+        {
+            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE CreatedBy = " + "'" + owner + "'").ToListAsync();
+
+            return result;
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() >= 0;

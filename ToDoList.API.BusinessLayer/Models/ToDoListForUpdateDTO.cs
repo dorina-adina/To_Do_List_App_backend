@@ -8,6 +8,8 @@ namespace ToDoListInfo.API.BusinessLayer.Models
         public short Priority { get; set; }
         public string? Createdby { get; set; }
         public DateTime? CreatedDate { get; set; }
+        //public DateTime? DueDate { get; set; }
+
 
     }
 }

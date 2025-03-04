@@ -65,6 +65,24 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
+
+        [HttpGet("Owner/{Owner}", Name = "GetToDoListByOwner")]
+        public async Task<ActionResult<IEnumerable<ToDoListDTO>>> GetToDoListByOwner(
+            string Owner)
+        {
+
+            var toDoLists = await _toDoListRepo
+                .GetListCreatedByAsync(Owner);
+
+            if (toDoLists == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<IEnumerable<ToDoListDTO>>(toDoLists));
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<ToDoListDTO>> InsertToDoList(ToDoListForInsertDTO toDoList)
         {
