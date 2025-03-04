@@ -66,13 +66,13 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         }
 
 
-        [HttpGet("Owner/{Owner}", Name = "GetToDoListByOwner")]
+        [HttpGet("owner/{idOwner}", Name = "GetToDoListByOwner")]
         public async Task<ActionResult<IEnumerable<ToDoListDTO>>> GetToDoListByOwner(
-            string Owner)
+            int idOwner)
         {
 
             var toDoLists = await _toDoListRepo
-                .GetListCreatedByAsync(Owner);
+                .GetListCreatedByAsync(idOwner);
 
             if (toDoLists == null)
             {

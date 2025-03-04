@@ -36,9 +36,9 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
             return result;
         }
 
-        public async Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(string owner)
+        public async Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(int idOwner)
         {
-            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE CreatedBy = " + "'" + owner + "'").ToListAsync();
+            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE IdOwner = " + idOwner).ToListAsync();
 
             return result;
         }
@@ -50,12 +50,12 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         public void AddList(ToDoListForInsertDTO toDoList)
         {
-            _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy) VALUES (" + "'" + @toDoList.Task + "'" + "," + @toDoList.Priority + "," + "'" + @toDoList.CreatedBy + "'" + ")");
+            _context.Database.ExecuteSqlRaw("INSERT INTO ToDoList (Task, Priority, CreatedBy, IdOwner) VALUES (" + "'" + @toDoList.Task + "'" + "," + @toDoList.Priority + "," + "'" + @toDoList.CreatedBy + "'" + "," + @toDoList.IdOwner + ")");
         }
 
         public void UpdateList(int id, ToDoListForUpdateDTO list)
         {
-            _context.Database.ExecuteSqlRaw("UPDATE ToDoList SET Task =" + "'" + @list.Task + "'" + "," + "Priority =" + @list.Priority + "," + "Createdby =" + "'" + @list.Createdby + "'" + "WHERE Id =" + @id);
+            _context.Database.ExecuteSqlRaw("UPDATE ToDoList SET Task =" + "'" + @list.Task + "'" + "," + "Priority =" + @list.Priority + "," + "Createdby =" + "'" + @list.Createdby + "'" + "," + "IdOwner =" + "'" + @list.IdOwner + "'" + "," + "DueDate =" + "'" + @list.DueDate + "'" + "WHERE Id =" + @id);
 
         }
 

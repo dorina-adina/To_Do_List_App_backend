@@ -45,7 +45,7 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
             string newPass = BCrypt.Net.BCrypt.EnhancedHashPassword(user.Pass, 13);
 
-            _context.Database.ExecuteSqlRaw("INSERT INTO Users (Name, PhoneNr, IsAdmin, Email, Pass) VALUES (" + "'" + @user.Name + "'" + "," + "'" + @user.PhoneNr + "'" + "," + "'" + @user.IsAdmin + "'" + "," + "'" + @user.Email + "'" + "," + "'" + newPass + "'" + ")");
+            _context.Database.ExecuteSqlRaw("INSERT INTO Users (Id, Name, PhoneNr, IsAdmin, Email, Pass) VALUES (" + @user.Id + "," + "'" + @user.Name + "'" + "," + "'" + @user.PhoneNr + "'" + "," + "'" + @user.IsAdmin + "'" + "," + "'" + @user.Email + "'" + "," + "'" + newPass + "'" + ")");
         }
 
         public async Task<UserDTO> GetUserAsync(string emailUser)

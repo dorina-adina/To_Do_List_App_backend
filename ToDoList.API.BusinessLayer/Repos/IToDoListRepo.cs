@@ -11,8 +11,7 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         Task<ToDoListDTO> GetListAsync(int listaId);
 
-        Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(string owner);
-
+        Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(int idOwner);
 
         void AddList(ToDoListForInsertDTO toDoList);
 

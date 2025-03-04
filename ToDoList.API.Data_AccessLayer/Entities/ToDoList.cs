@@ -17,5 +17,9 @@ namespace ToDoListInfo.API.Data_AccessLayer.Entities
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
 
+        [ForeignKey("IdOwner")]
+        public int IdOwner { get; set; }
+        public DateTime? DueDate { get; set; }
+
     }
 }

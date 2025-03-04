@@ -46,8 +46,8 @@ builder.Services.AddTransient<IMailService, CloudMailServices>();
 
 builder.Services.AddDbContext<ToDoListInfoContext>(options =>
     options.UseSqlServer(
-//builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
-builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
+builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+//builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
 
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
 
