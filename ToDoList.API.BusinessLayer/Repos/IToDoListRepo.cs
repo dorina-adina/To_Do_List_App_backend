@@ -21,7 +21,7 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         Task<bool> SaveChangesAsync();
 
-        Task<Upload> AddFileAsync(string fileName, string filePath);
+        Task<Upload> AddFileAsync(string fileName, string filePath, int idOwner, string emailOwner);
 
 
 

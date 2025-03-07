@@ -130,7 +130,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file, int idOwner, string emailOwner)
         {
             if (file == null || file.Length == 0 || file.Length > 20971520)
             {
@@ -147,7 +147,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath);
+            var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath, idOwner, emailOwner);
 
             _logger.LogInformation("File {FileName} was uploaded succesfully!", fileName);
 

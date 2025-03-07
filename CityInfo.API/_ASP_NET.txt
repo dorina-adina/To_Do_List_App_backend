@@ -1,0 +1,286 @@
+-Kestrel
+-Dependecy Injection
+-Middleware
+-The Request Pipeline -> routing, static files(wwwroot), autorization
+-Razor = HTML + c#(cshtml)
+->@ inainte de c# statement
+-wwwroot - css, images
+-[validari]
+-object lifetimes: singleton, transient, scooped(external dependecies)
+
+Frontend - MVC, Razor Pages(server), ,Blazor(client) 
+---------server-rendered applications
+
+-patterns - Razor Pages; MVC
+
+RAZOR PAGES(- to the page): index; _layout.cshtml - @RenderBody(); <a asp-page=...> - name of a page => URL
+Create  page - <form...; <asp-validation...; <asp-for...
+data binding 
+
+MVC - to the method(Action) of a class(Controller)
+    - model
+    - view 
+MapControllerRoute
+<a asp-action...
+
+MVC - more complex
+    - routing more complex
+    - separation is an advantage
+    - changeability is more complicated
+    - reusability is easier
+
+---------client-rendered applications
+
+-single page application
+-BALZOR - .NET and C#
+        - writing components
+        - components can be reused
+-Blazor WebAssembly - Browser ->(get) Server(Components) ->(Assemblies+.NET) Browser
+WebAssembly - language browser can interpret
+- js file
+-create.razor; index.razor(pages)
+[Inject]
+Blazor Server - SignalR
+              - same components as in Blazor WebAssembly
+Blazer Server vs Blazor WebAssembly
+default rendering mode: static
+
+API
+Backend - Web API; gRPC
+Suporting - SignalR
+Serialized data
+APIs with Server-rendered Frontends
+Server -> Server            -> Browser
+(API)  <- (Razor Pages/MVC) <- (Html)
+APIs with Client-rendered Frontends
+Server  <-  Browser
+(API)   ->  (Blazor WebAssembly)
+Rest APIs with Web API 
+Web API - controller + model
+Swagger - documentation for API
+[ApiController]
+[Route("[controller]")]
+[HttpGet]; [HttpGet("{id:int}")]; [HttpPost]
+lamba syntex
+minimal API
+
+gRPC - standard, remote procedure call, focus on performance, protocol buffers, contract first
+message Product{} - define product type
+Protocol Buffers
+REST with Web API vs gRPC
+gRPC - internal use; 
+
+signalR - no contract; stability connection; security; 
+        - hub method call
+        - client methods call
+
+
+
+
+
+
+FUNDAMENTALS
+-Server-side rendered app
+-Services
+-Client-side rendered app
+-app frameworks - MVC, Razor Pages, Api + Api minimal, Blazor
+-wwwroot - static files
+-CreateBuilder Method - set up Kestrel(web server) server; configure IIS integration; specify content root; read app settings
+-reverse proxy
+-SERVICE REGISTRATION - all classes used by the app(- servicies)
+                      - more modular approach
+                      - more dependencies will need to be injected
+TIGHT COUPLING
+DI container
+Constructor injection
+Middleware request Pipeline
+Endpoint middelware => response
+Static file middleware
+!!!ORDER
+
+MVC pattern 
+-common design pattern; 
+-separation of concerns
+-less dependencies
+-testability
+request -> CONTROLLER -> update VIEW
+                              | get data from
+                      -> update MODEL
+MODEL - domain data and logic to manage the data
+      - simple API
+      - hides detailes
+- register the repo in the container
+- register services
+AddScoped
+Keyed Servicies - multiple servicies implement the same interface 
+and we need one specific
+
+Controller - central role; respond to user; interact with model and select view; no knowldege of data 
+
+View - HTML template; razor code; no logic; 
+-matching the action with the view
+ViewBag.Message
+
+
+ASP.NET Core Web API Fundamentals
+-MVC/Minimal API
+-request pipeline <= middleware
+-request -> Middleware -> response
+-!!!ordine
+-ENVIRONMENT
+-MVC(for implementing user interfaces) - very common; separation of concerns; improves testability; promotes reuse
+MODEL - app data and/or business logic and rules
+VIEW - representation of model data
+CONTROLLER - enables accepting user input and translating that to model data view can work with
+Routing - matches a request URI to an action on a controller
+
+
+-> Retruning Resources(Part 2)
+ENDPOINT
+POSTMAN
+Status codes
+-100 = infromational
+-200 = succes(200 - ok; 201 - created; 204 - no content)
+-300 = redirection
+-400 = client mistake(400 - bad request; 401 - unauthorized; 403 - forbiden; 404; 409 - conflict)
+-500 = server mistake(500 - internal server mistake)
+Child resources
+
+Manipulating ProblemDetails Responses
+
+Content Negotiation
+
+output formatter - Accept header
+input formatter - content-type header
+
+-support implemented byObjectResult
+-daca nu e implementat, returneaza in mod obisnuit(vrem xml, dar returneaza json in cazul nostru)
+!!! getting a file !!!
+
+
+PARSING DATA TO THE API
+[FromBody]
+[ReomForm]
+[FromRoute]
+[FromQuery]
+
+!!!Dto diferite pt create, update, return
+
+Fluent Validation
+
+JSON patch - partially updating a resource
+-opeation; path; value
+
+Dependency Injection
+-> inversion of control and dependency injection
+-> tight coupling
+-> dependcy injection
+->injection and using a logger
+-injection is the preffered way of requesting dependecies
+-handling and logging exceptions
+
+
+---globally handling and logging exceptions
+
+-third party logging providers
+
+-implementing and using a custom service
+
+-transient: each time requested
+-scoped: once/request
+-singleton: the first time they are requested
+
+-register a service by interfaces
+
+-working with configuration file
+
+-scoping configurations to the environments
+
+OBJECT RELATIONAL MAPPING - ORM
+- entity framework
+- entity classes
+- creating a db context
+
+- migrations
+- verif daca s-a instalat SQLite
+
+- seeding the database with data
+
+- safely storing sensitive configuration data - !!!
+
+- SQL INJECTION
+Safe - LINQ queries
+     - .FromSql()
+     - .FromSqlInterpolated()
+
+Unsafe - .FromSqlRaw()
+       - 
+
+----------------------------------------------------------------
+
+MODULE 7
+
+-REPOITORY PATTERN
+
+NO repository pattern
+-code duplication
+-more error-prone code
+-harder to test the consuming class
+
+repository pattern
+-
+-
+-
+
+Persistence ignorant
+
+Async Code - freeing threads 
+
+Synchronous
+-thread pool
+-1 thread - 1 request
+-another thread for another request
+
+Asynchronous
+-more efficient
+
+UPDATING
+
+-updating a resource
+-partially 
+-deleting a resource
+
+Module 8
+-FILTERING - precise
+-nullable
+
+-SEARCHING - nu stii exact ce cauti
+
+-deferred execution
+-paging through resources
+-pagination metadata
+!limit page size
+!provide defaul values for page size and page number(pass them as query string parameters))
+
+SECURING API's
+-token-based security
+-implementing
+->payload
+->signature
+->header
+-creating a token
+-working with authorization ploicies
+ABAC/CBAC/PBAC
+-improved token-based
+OAuth2
+OpenID Connect
+
+Versioning API
+Documentating API
+
+TESTING
+-API endpoints
+HTTP_Repl
+http
+PUBLISHING
+DEPLOYING

@@ -66,13 +66,15 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
         }
  
 
-        public async Task<Upload> AddFileAsync(string fileName, string filePath)
+        public async Task<Upload> AddFileAsync(string fileName, string filePath, int idOwner, string emailOwner)
         {
             var fileUpload = new Upload
             {
                 Name = fileName,
                 Path = filePath,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                IdOwner = idOwner,
+                EmailOwner = emailOwner
             };
 
             _context.Upload.Add(fileUpload);

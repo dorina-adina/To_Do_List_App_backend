@@ -17,5 +17,10 @@ namespace ToDoListInfo.API.Data_AccessLayer.Entities
         public string Path { get; set; }
         public DateTime? CreatedDate { get; set; }
 
+        [ForeignKey("IdOwner")]
+        public int IdOwner { get; set; }
+        public string EmailOwner { get; set; }
+
+
     }
 }
