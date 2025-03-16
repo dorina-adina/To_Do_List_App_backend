@@ -16,7 +16,7 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 
         public async Task<IEnumerable<ToDoListDTO>> GetListsAsync()
         {
-            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList").ToListAsync();
+            var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoLists").ToListAsync();
 
             return result;
 

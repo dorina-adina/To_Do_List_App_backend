@@ -151,8 +151,6 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             }
 
             return Unauthorized(new { message = "Password is incorrect!" });
-
-
         }
 
 

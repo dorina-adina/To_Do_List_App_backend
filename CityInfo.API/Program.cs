@@ -46,7 +46,7 @@ builder.Services.AddTransient<IMailService, CloudMailServices>();
 
 builder.Services.AddDbContext<ToDoListInfoContext>(options =>
     options.UseSqlServer(
-builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+builder.Configuration.GetConnectionString("Server=DESKTOP-3MH72LO\\SQLEXPRESS;Database=adina_todos;Trusted_Connection=True;Integrated Security=True;TrustServerCertificate=True;")));
 //builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
 
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
@@ -56,7 +56,7 @@ builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
 builder.Services.AddDbContext<UserInfoContext>(options =>
     options.UseSqlServer(
 //builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
-builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
+builder.Configuration.GetConnectionString("Server=DESKTOP-3MH72LO\\SQLEXPRESS;Database=adina_todos;Trusted_Connection=True;Integrated Security=True;TrustServerCertificate=True;")));
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
@@ -170,20 +170,18 @@ if (!app.Environment.IsDevelopment())
 
 app.UseForwardedHeaders();
 
-if (app.Environment.IsDevelopment())
+// Modificare: Permiterea rulării Swagger indiferent de mediul de execuție
+app.UseSwagger();
+app.UseSwaggerUI(setupAction =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(setupAction =>
+    var descriptions = app.DescribeApiVersions();
+    foreach (var description in descriptions)
     {
-        var descriptions = app.DescribeApiVersions();
-        foreach (var description in descriptions)
-        {
-            setupAction.SwaggerEndpoint(
-                $"/swagger/{description.GroupName}/swagger.json",
-                description.GroupName.ToUpperInvariant());
-        }
-    });
-}
+        setupAction.SwaggerEndpoint(
+            $"/swagger/{description.GroupName}/swagger.json",
+            description.GroupName.ToUpperInvariant());
+    }
+});
 
 app.UseCors("AllowSpecificOrigin");
 
