@@ -22,7 +22,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
     //[Authorize]
     [Route("api/v{version:apiVersion}/users")]
     //[Route("api/[controller]")]
-    [Asp.Versioning.ApiVersion(4)]
+    [Asp.Versioning.ApiVersion(3)]
 
 
     public class UsersControllers: ControllerBase
@@ -115,7 +115,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
             if (user == false)
             {
-                return Unauthorized(new {flag = false, message = "User is not an admin!" });
+                return Ok(new {flag = false, message = "User is not an admin!" });
             }
 
             return Ok(new {flag = true, message = "User is an admin!" });

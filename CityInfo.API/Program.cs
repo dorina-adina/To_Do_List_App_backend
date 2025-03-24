@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.SignalR;
 using ToDoListInfo.API.Data_AccessLayer.Services;
 using ToDoListInfo.API.DBLayer.DbContexts;
 using ToDoListInfo.API.BusinessLayer.Repos;
+using System.Data.Common;
+using Microsoft.Extensions.Configuration.Json;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -27,7 +29,10 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers(options =>
 {
     options.ReturnHttpNotAcceptable = true;
-}).AddNewtonsoftJson()
+}).AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.DateFormatString = "dd-MM-yyyy"; 
+})
 .AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddProblemDetails();
@@ -46,17 +51,18 @@ builder.Services.AddTransient<IMailService, CloudMailServices>();
 
 builder.Services.AddDbContext<ToDoListInfoContext>(options =>
     options.UseSqlServer(
-builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
-//builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
+//builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+//builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=adina;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
+builder.Configuration.GetConnectionString("dbConnection")));
 
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
 
 
 
-builder.Services.AddDbContext<UserInfoContext>(options =>
-    options.UseSqlServer(
-//builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
-builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=BT.Cj#9628517;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
+//builder.Services.AddDbContext<UserInfoContext>(options =>
+//    options.UseSqlServer(
+////builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
+//builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=adina;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
@@ -99,6 +105,7 @@ builder.Services.AddApiVersioning(setupAction =>
 {
     setupAction.SubstituteApiVersionInUrl = true;
 });
+
 
 var apiVersionDescriptionProvider = builder.Services.BuildServiceProvider()
   .GetRequiredService<IApiVersionDescriptionProvider>();

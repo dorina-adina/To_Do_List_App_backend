@@ -8,6 +8,7 @@ using ToDoListInfo.API.BusinessLayer.Models;
 using ToDoListInfo.API.BusinessLayer.Repos;
 using ToDoListInfo.API.Data_AccessLayer.Entities;
 using ToDoListInfo.API.Data_AccessLayer.Services;
+using StegoHelper;
 
 
 namespace ToDoList.API.Presentation_Layer.Controllers
@@ -44,7 +45,17 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         {
             var listsEntities = await _toDoListRepo.GetListsAsync();
 
+            //foreach (var task in listsEntities)
+            //{
+            //    if (task.CreatedDate != null)
+            //    {
+            //        string dataFrumix = task.CreatedDate.ToString();
+            //        task.CreatedDate = dataFrumix;
+            //    }
+            //}
+
             return Ok(_mapper.Map<IEnumerable<ToDoListDTO>>(listsEntities));
+
 
         }
 
@@ -60,6 +71,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             {
                 return NotFound();
             }
+
 
             return Ok(_mapper.Map<ToDoListDTO>(toDoList));
 
@@ -130,9 +142,9 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile(IFormFile file, int idOwner, string emailOwner)
+        public async Task<IActionResult> UploadFile(IFormFile file, int idOwner, string emailOwner, IFormFile info, IFormFile outputFile)
         {
-            if (file == null || file.Length == 0 || file.Length > 20971520)
+            if (file == null || file.Length == 0 || file.Length > 20971520 || info == null || info.Length == 0 || info.Length > 20971520)
             {
                 return BadRequest("No file uploaded.");
             }
@@ -142,12 +154,18 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 Directory.GetCurrentDirectory(),
                 $"_{fileName}");
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
+            //using (var stream = new FileStream(filePath, FileMode.Create))
+            //{
+            //    await file.CopyToAsync(stream);
+            //}
 
-            var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath, idOwner, emailOwner);
+            //using (var reader = new StreamReader(info.OpenReadStream()))
+            //{
+            //    string text = reader.ReadToEnd();
+            //    await SteganographyHelper.EmbedText(text, filePath, outputFile);
+            //}
+
+            var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath, idOwner, emailOwner, filePath);
 
             _logger.LogInformation("File {FileName} was uploaded succesfully!", fileName);
 

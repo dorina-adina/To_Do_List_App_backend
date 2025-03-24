@@ -20,6 +20,8 @@ namespace ToDoListInfo.API.Data_AccessLayer.Entities
         [ForeignKey("IdOwner")]
         public int IdOwner { get; set; }
         public string EmailOwner { get; set; }
+        public string InfoPath { get; set; }
+
 
 
     }

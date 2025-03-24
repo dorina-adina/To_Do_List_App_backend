@@ -1,4 +1,6 @@
-﻿namespace ToDoListInfo.API.BusinessLayer.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ToDoListInfo.API.BusinessLayer.Models
 {
     public class ToDoListDTO
     {
@@ -6,7 +8,9 @@
         public string Task { get; set; }
         public short Priority { get; set; }
         public string? CreatedBy { get; set; }
-        public DateTime? CreatedDate { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime CreatedDate { get; set; }
         public int IdOwner {  get; set; } 
         public DateTime? DueDate { get; set; }
 

@@ -13,9 +13,10 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
 {
     public class UserRepo : IUserRepo
     {
-        private readonly UserInfoContext _context;
+        //private readonly UserInfoContext _context;
+        private readonly ToDoListInfoContext _context;
 
-        public UserRepo(UserInfoContext context)
+        public UserRepo(ToDoListInfoContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

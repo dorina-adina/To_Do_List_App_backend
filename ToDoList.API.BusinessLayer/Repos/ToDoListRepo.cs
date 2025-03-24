@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ToDoListInfo.API.BusinessLayer.Models;
 using ToDoListInfo.API.Data_AccessLayer.Entities;
 using ToDoListInfo.API.DBLayer.DbContexts;
@@ -18,31 +20,26 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
         {
             var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList").ToListAsync();
 
+  
+
             return result;
-
         }
-
         public async Task<bool> ListExistsAsync(int listaId)
         {
             var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE Id = listaId").AnyAsync();
-
             return result;
         }
-
         public async Task<ToDoListDTO> GetListAsync(int listaId)
         {
             var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE Id = " + listaId).FirstOrDefaultAsync();
-
+           
             return result;
         }
-
         public async Task<IEnumerable<ToDoListDTO>> GetListCreatedByAsync(int idOwner)
         {
             var result = await _context.Database.SqlQueryRaw<ToDoListDTO>("SELECT * FROM ToDoList WHERE IdOwner = " + idOwner).ToListAsync();
-
             return result;
         }
-
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() >= 0;
@@ -66,7 +63,7 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
         }
  
 
-        public async Task<Upload> AddFileAsync(string fileName, string filePath, int idOwner, string emailOwner)
+        public async Task<Upload> AddFileAsync(string fileName, string filePath, int idOwner, string emailOwner, string infoPath)
         {
             var fileUpload = new Upload
             {
@@ -74,7 +71,8 @@ namespace ToDoListInfo.API.BusinessLayer.Repos
                 Path = filePath,
                 CreatedDate = DateTime.Now,
                 IdOwner = idOwner,
-                EmailOwner = emailOwner
+                EmailOwner = emailOwner,
+                InfoPath = infoPath
             };
 
             _context.Upload.Add(fileUpload);

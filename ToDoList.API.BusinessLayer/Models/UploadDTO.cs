@@ -17,5 +17,7 @@ namespace ToDoListInfo.API.BusinessLayer.Models
         [ForeignKey("IdOwner")]
         public int IdOwner { get; set; }
         public string EmailOwner { get; set; }
+        public string InfoPath { get; set; }
+
     }
 }

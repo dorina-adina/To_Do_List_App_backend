@@ -12,8 +12,8 @@ namespace ToDoListInfo.API.BusinessLayer.Profiles
             CreateMap<ToDoListForInsertDTO, ToDoList>();
             CreateMap<ToDoListForUpdateDTO, ToDoList>();
             CreateMap<ToDoList, ToDoListForUpdateDTO>();
-            CreateMap<ToDoList,ToDoListDTO>()
-    .ForMember(ToDoListDTO => ToDoListDTO.CreatedDate, ToDoList => ToDoList.MapFrom(src => new DateTime(src.CreatedDate.Value.Year, src.CreatedDate.Value.Month, src.CreatedDate.Value.Day)));
+    //        CreateMap<ToDoList,ToDoListDTO>()
+    //.ForMember(ToDoListDTO => ToDoListDTO.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.ToString(src.CreatedDate.Day.ToString())));
             CreateMap<UploadDTO, Upload>();
 
         }
