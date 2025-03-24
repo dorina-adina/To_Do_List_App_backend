@@ -16,12 +16,15 @@ using ToDoListInfo.API.DBLayer.DbContexts;
 using ToDoListInfo.API.BusinessLayer.Repos;
 using System.Data.Common;
 using Microsoft.Extensions.Configuration.Json;
+using ToDoListInfo.API.DBLayer;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.Console()
     .WriteTo.File("logs/cityinfo.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
@@ -55,7 +58,12 @@ builder.Services.AddDbContext<ToDoListInfoContext>(options =>
 //builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=adina;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
 builder.Configuration.GetConnectionString("dbConnection")));
 
+builder.Services.AddDbLayerDependencies(
+    builder.Configuration);
+
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
+
+
 
 
 
