@@ -1,22 +1,21 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
-using ToDoList.API;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.SignalR;
 using ToDoListInfo.API.Data_AccessLayer.Services;
 using ToDoListInfo.API.DBLayer.DbContexts;
-using ToDoListInfo.API.BusinessLayer.Repos;
-using System.Data.Common;
-using Microsoft.Extensions.Configuration.Json;
+using ToDoListInfo.API.Data_AccessLayer.Repos;
 using ToDoListInfo.API.DBLayer;
+using ToDoListInfo.API.BusinessLayer.Profiles;
+using Google.Apis.Auth.AspNetCore3;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -32,10 +31,7 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers(options =>
 {
     options.ReturnHttpNotAcceptable = true;
-}).AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.DateFormatString = "dd-MM-yyyy"; 
-})
+}).AddNewtonsoftJson()
 .AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddProblemDetails();
@@ -54,8 +50,6 @@ builder.Services.AddTransient<IMailService, CloudMailServices>();
 
 builder.Services.AddDbContext<ToDoListInfoContext>(options =>
     options.UseSqlServer(
-//builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
-//builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=adina;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
 builder.Configuration.GetConnectionString("dbConnection")));
 
 builder.Services.AddDbLayerDependencies(
@@ -63,23 +57,52 @@ builder.Services.AddDbLayerDependencies(
 
 builder.Services.AddScoped<IToDoListRepo, ToDoListRepo>();
 
-
-
-
-
-//builder.Services.AddDbContext<UserInfoContext>(options =>
-//    options.UseSqlServer(
-////builder.Configuration.GetConnectionString("Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;User Id=sa;Password=BT.Cj#9628517;TrustServerCertificate=True;")));
-//builder.Configuration.GetConnectionString("Server=DESKTOP-0FC0IG4\\SQLEXPRESS01;Database=DBTest;User Id=sa;Password=adina;MultipleActiveResultSets=True;TrustServerCertificate=True;")));
-
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 
+builder.Services.AddAutoMapper(typeof(ToDoListProfile));
+builder.Services.AddAutoMapper(typeof(UserProfile));
 
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
+
+
+//builder.Services.AddAuthentication().AddGoogle(o =>
+// //{
+
+// //    o.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+
+// //    o.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+
+// //    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+// //})
+// //       .AddCookie()
+// //       .AddGoogleOpenIdConnect(options =>
+//    {
+//         o.ClientId = builder.Configuration["Authorization:Google:ClientId"];
+//         o.ClientSecret = builder.Configuration["Authorization:Google:ClientSecret"];
+//    });
+
+
+
+
+
+builder.Services.AddAuthentication
+(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddCookie().AddGoogle(o =>
+{
+    o.ClientId = builder.Configuration["Authorization:Google:ClientId"];
+    o.ClientSecret = builder.Configuration["Authorization:Google:ClientSecret"];
+    ///verificari daca e null ClientId sau ClientSecret
+    o.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+})
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new()
     {
@@ -146,17 +169,17 @@ builder.Services.AddSwaggerGen(setupAction =>
     });
 
     setupAction.AddSecurityRequirement(new()
-    {
         {
-            new ()
             {
-                Reference = new OpenApiReference {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "CityInfoApiBearerAuth" }
-            },
-            new List<string>()
-        }
-    });
+                new ()
+                {
+                    Reference = new OpenApiReference {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "CityInfoApiBearerAuth" }
+                },
+                new List<string>()
+            }
+        });
 });
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

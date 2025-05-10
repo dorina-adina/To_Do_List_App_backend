@@ -17,9 +17,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ToDoList.API.Data_AccessLayer\ToDoListInfo.API.Data_AccessLayer.csproj" />
-  </ItemGroup>
 
   
 </Project>

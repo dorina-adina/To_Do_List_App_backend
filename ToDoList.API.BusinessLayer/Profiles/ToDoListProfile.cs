@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ToDoListInfo.API.BusinessLayer.Models;
-using ToDoListInfo.API.Data_AccessLayer.Entities;
+using ToDoListInfo.API.Data_AccessLayer.Helpers;
+using ToDoListInfo.API.DBLayer.Entities;
 
 namespace ToDoListInfo.API.BusinessLayer.Profiles
 {
@@ -8,12 +9,13 @@ namespace ToDoListInfo.API.BusinessLayer.Profiles
     {
         public ToDoListProfile()
         {
-            CreateMap<ToDoList, ToDoListDTO>();
-            CreateMap<ToDoListForInsertDTO, ToDoList>();
-            CreateMap<ToDoListForUpdateDTO, ToDoList>();
-            CreateMap<ToDoList, ToDoListForUpdateDTO>();
-    //        CreateMap<ToDoList,ToDoListDTO>()
-    //.ForMember(ToDoListDTO => ToDoListDTO.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.ToString(src.CreatedDate.Day.ToString())));
+            CreateMap<ToDoList, ToDoListDTO>()
+            .ForMember(ToDoListDTO => ToDoListDTO.CreatedDate, opt => opt.MapFrom(src => DateHelper.DateFormat(src.CreatedDate)))
+            .ForMember(ToDoListDTO => ToDoListDTO.DueDate, opt => opt.MapFrom(src => DateAndTimeHelper.DateFormat(src.DueDate)));
+            CreateMap<ToDoListForInsertDTO, ToDoList>()
+            .ForMember(ToDoList => ToDoList.DueDate, opt => opt.MapFrom(src => DateHelper.ReverseDate(src.DueDate)));
+            CreateMap<ToDoListForUpdateDTO, ToDoList>()
+             .ForMember(ToDoList => ToDoList.DueDate, opt => opt.MapFrom(src => DateHelper.ReverseDate(src.DueDate)));
             CreateMap<UploadDTO, Upload>();
 
         }

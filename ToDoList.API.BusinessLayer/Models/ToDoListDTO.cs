@@ -8,11 +8,9 @@ namespace ToDoListInfo.API.BusinessLayer.Models
         public string Task { get; set; }
         public short Priority { get; set; }
         public string? CreatedBy { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime CreatedDate { get; set; }
-        public int IdOwner {  get; set; } 
-        public DateTime? DueDate { get; set; }
+        public string CreatedDate { get; set; }
+        public int IdOwner {  get; set; }
+        public string DueDate { get; set; }
 
     }
 }

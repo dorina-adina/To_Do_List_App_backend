@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using ToDoListInfo.API.BusinessLayer.Models;
-using ToDoListInfo.API.Data_AccessLayer.Entities;
+using ToDoListInfo.API.DBLayer.Entities;
 
 namespace ToDoListInfo.API.BusinessLayer.Profiles
 {

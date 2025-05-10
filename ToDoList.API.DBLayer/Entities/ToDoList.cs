@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace ToDoListInfo.API.Data_AccessLayer.Entities
+namespace ToDoListInfo.API.DBLayer.Entities
 {
     public class ToDoList
     {
@@ -14,16 +14,14 @@ namespace ToDoListInfo.API.Data_AccessLayer.Entities
 
         [ForeignKey("Priority")]
         public short Priority { get; set; }
-
         public string? CreatedBy { get; set; }
 
-
-        [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
 
         [ForeignKey("IdOwner")]
         public int IdOwner { get; set; }
-        public DateTime? DueDate { get; set; }
+
+        public DateTime DueDate { get; set; }
 
     }
 }

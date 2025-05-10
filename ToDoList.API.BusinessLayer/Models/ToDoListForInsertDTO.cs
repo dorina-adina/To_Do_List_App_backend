@@ -9,7 +9,7 @@ namespace ToDoListInfo.API.BusinessLayer.Models
         public string? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public int IdOwner { get; set; }
-        public DateTime? DueDate { get; set; }
+        public string DueDate { get; set; }
 
 
     }

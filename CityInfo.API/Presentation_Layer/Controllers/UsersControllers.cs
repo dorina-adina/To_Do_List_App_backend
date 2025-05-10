@@ -1,37 +1,36 @@
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.IdentityModel.Tokens;
 using ToDoListInfo.API.BusinessLayer.Models;
-using ToDoListInfo.API.BusinessLayer.Repos;
-using ToDoListInfo.API.Data_AccessLayer.Entities;
-using ToDoListInfo.API.Data_AccessLayer.Services;
-
+using ToDoListInfo.API.Data_AccessLayer.Repos;
+using Google.Apis.Auth.AspNetCore3;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
+using Microsoft.AspNetCore.Identity;
+using Google.Apis.Drive.v3.Data;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace ToDoList.API.Presentation_Layer.Controllers
 {
-    //"DbConnectionString": "Server=BTCCLPF1PMR0J\\SQLTESTSERVER;Database=DbTest;UserId=sa;Password=BT.Cj#9628517;TrustedConnection=True;",
 
     [ApiController]
     //[Authorize]
     [Route("api/v{version:apiVersion}/users")]
     //[Route("api/[controller]")]
-    [Asp.Versioning.ApiVersion(3)]
+    [Asp.Versioning.ApiVersion(1)]
 
 
-    public class UsersControllers: ControllerBase
+    public class UsersControllers : ControllerBase
     {
-
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly ILogger<ListsControllers> _logger;
-        //private readonly string _jwt = "mare_secret_mare";
+        //private readonly string _googleUserInfoUrl = configuration["Authorization:Google:UserInfoUrl"]!;
+        //private readonly SignInManager<User> _signInManager;
 
 
 
@@ -43,6 +42,8 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 throw new ArgumentNullException(nameof(mapper));
             _logger = logger ??
                 throw new ArgumentNullException(nameof(logger));
+            //_signInManager = signInManager ??
+            //    throw new ArgumentNullException(nameof(signInManager));
         }
 
         [HttpGet]
@@ -66,13 +67,16 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
             if (existsEmail != null)
             {
-                return Conflict(new { message = "Email is already registered!" }); 
+                return Conflict(new { message = "Email is already registered!" });
 
             }
 
-            _userRepo.AddUser(user);
+            var userToAdd = _mapper.Map<ToDoListInfo.API.DBLayer.Entities.Users>(user);
 
-            await _userRepo.SaveChangesAsync();
+
+            _userRepo.AddUser(userToAdd);
+
+            //await _userRepo.SaveChangesAsync();
 
             return Ok(new { message = "Registration successful!" });
 
@@ -95,19 +99,6 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
-        //[HttpGet("{emailUser}", Name = "Exist")]
-        //public async Task<ActionResult> UserExist(string emailUser)
-        //{
-        //    var user = await _userRepo.UserExistsAsync(emailUser);
-
-        //    if (user == false)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok();
-        //}
-
         [HttpGet("isAdmin/{emailUser}", Name = "Exist")]
         public async Task<ActionResult> IsAdmin(string emailUser)
         {
@@ -115,10 +106,10 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
             if (user == false)
             {
-                return Ok(new {flag = false, message = "User is not an admin!" });
+                return Ok(new { flag = false, message = "User is not an admin!" });
             }
 
-            return Ok(new {flag = true, message = "User is an admin!" });
+            return Ok(new { flag = true, message = "User is an admin!" });
         }
 
 
@@ -140,13 +131,11 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
             bool verification = BCrypt.Net.BCrypt.EnhancedVerify(user.Pass, existsUser.Pass);
 
-            //var token = GenerateJwtToken(user.Email);
 
 
             if (verification)
             {
                 return Ok(new { message = "Login successful!" });
-                //return Ok(new { token });
 
             }
 
@@ -155,6 +144,56 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
+        //[GoogleScopedAuthorize(DriveService.ScopeConstants.DriveReadonly)]
+        //public async Task<ActionResult> DriveFileList([FromServices] IGoogleAuthProvider auth)
+        //{
+        //    GoogleCredential cred = await auth.GetCredentialAsync();
+        //    var service = new DriveService(new BaseClientService.Initializer
+        //    {
+        //        HttpClientInitializer = cred
+        //    });
+        //    var files = await service.Files.List().ExecuteAsync();
+        //    var fileNames = files.Files.Select(x => x.Name).ToList();
+        //    return View(fileNames);
+        //}
+
+        //private ActionResult View(List<string> fileNames)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public IActionResult ExternalLogin(string provider, string returnUrl = "")
+        //{
+        //    var redirectUrl = Url.Action("ExternalLoginCallback", "Authentication", new { ReturnUrl = returnUrl });
+
+        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+        //    return new ChallengeResult(provider, properties);
+        //}
+
+        //[HttpPost("LoginGoogle")]
+        //public IResult LoginGoogle([FromQuery] string returnUrl, LinkGenerator linkGenerator, SignInManager<User> signInManager, HttpContext context)
+        //{
+        //    var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", linkGenerator.GetPathByName(context, "GoogleLoginCallback") + $"?returnUrl={returnUrl}");
+
+        //    return Results.Challenge(properties, ["Google"]);
+
+        //}
+
+        //[HttpPost("LoginGoogleCallback")]
+        //public async Task<IResult> LoginGoogleCallback([FromQuery] string returnUrl, HttpContext context, IUserRepo userRepo)
+        //{
+        //    var result = await context.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+        //    if (!result.Succeeded)
+        //    {
+        //        return Results.Unauthorized();
+        //    }
+
+        //    await userRepo.LoginGoogleAsync(result.Principal);
+
+        //    return Results.Redirect(returnUrl);
+        //}
 
     }
 }
