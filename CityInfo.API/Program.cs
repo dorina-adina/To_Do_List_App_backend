@@ -1,20 +1,21 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Google.Apis.Auth.AspNetCore3;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
-using ToDoListInfo.API.Data_AccessLayer.Services;
-using ToDoListInfo.API.DBLayer.DbContexts;
+using ToDoListInfo.API.BusinessLayer.Profiles;
 using ToDoListInfo.API.Data_AccessLayer.Repos;
 using ToDoListInfo.API.DBLayer;
-using ToDoListInfo.API.BusinessLayer.Profiles;
-using Google.Apis.Auth.AspNetCore3;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ToDoListInfo.API.DBLayer.DbContexts;
 
 
 Log.Logger = new LoggerConfiguration()
@@ -42,11 +43,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
-#if DEBUG
-builder.Services.AddTransient<IMailService, LocalMailService>();
-#else
-builder.Services.AddTransient<IMailService, CloudMailServices>();
-#endif
+
 
 builder.Services.AddDbContext<ToDoListInfoContext>(options =>
     options.UseSqlServer(
@@ -65,43 +62,24 @@ builder.Services.AddAutoMapper(typeof(UserProfile));
 
 
 
-
-
-//builder.Services.AddAuthentication().AddGoogle(o =>
-// //{
-
-// //    o.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-
-// //    o.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-
-// //    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-// //})
-// //       .AddCookie()
-// //       .AddGoogleOpenIdConnect(options =>
-//    {
-//         o.ClientId = builder.Configuration["Authorization:Google:ClientId"];
-//         o.ClientSecret = builder.Configuration["Authorization:Google:ClientSecret"];
-//    });
-
-
-
-
-
 builder.Services.AddAuthentication
 (opt =>
 {
-    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+    opt.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+    opt.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
-}).AddCookie().AddGoogle(o =>
+}).AddCookie()
+
+.AddGoogle(o =>
 {
     o.ClientId = builder.Configuration["Authorization:Google:ClientId"];
     o.ClientSecret = builder.Configuration["Authorization:Google:ClientSecret"];
-    ///verificari daca e null ClientId sau ClientSecret
     o.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
 })
+
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new()
@@ -117,14 +95,7 @@ builder.Services.AddAuthentication
 
 });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("MustBeFromAntwerp", policy =>
-    {
-        policy.RequireAuthenticatedUser();
-        policy.RequireClaim("city", "Antwerp");
-    });
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddApiVersioning(setupAction =>
 {
@@ -152,7 +123,7 @@ builder.Services.AddSwaggerGen(setupAction =>
             {
                 Title = "To-Do List API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Through this API you can access yours to-do lists."
+                Description = "Through this API you can access your tasks."
             });
     }
 
@@ -161,25 +132,6 @@ builder.Services.AddSwaggerGen(setupAction =>
 
     setupAction.IncludeXmlComments(xmlCommentsFullPath);
 
-    setupAction.AddSecurityDefinition("CityInfoApiBearerAuth", new()
-    {
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        Description = "Input a valid token to access this API"
-    });
-
-    setupAction.AddSecurityRequirement(new()
-        {
-            {
-                new ()
-                {
-                    Reference = new OpenApiReference {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "CityInfoApiBearerAuth" }
-                },
-                new List<string>()
-            }
-        });
 });
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -195,7 +147,9 @@ builder.Services.AddCors(options =>
         {
             builder.WithOrigins("http://localhost:5173")
                    .AllowAnyHeader()
-                   .AllowAnyMethod();
+                   .AllowAnyMethod()
+                   .WithExposedHeaders("Content-Disposition");
+
         });
 });
 

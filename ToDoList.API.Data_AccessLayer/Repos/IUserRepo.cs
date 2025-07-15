@@ -20,7 +20,9 @@ namespace ToDoListInfo.API.Data_AccessLayer.Repos
 
         Task<bool> SaveChangesAsync();
 
-        //Task LoginGoogleAsync(ClaimsPrincipal? claimsPrincipal);
+        Task<bool> LoginGoogleAsync(ClaimsPrincipal? claimsPrincipal);
+
+        Task<Users> ChangePasswordUser(string newPass, string email);
 
 
     }

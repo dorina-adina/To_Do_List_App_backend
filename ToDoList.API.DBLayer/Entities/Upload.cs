@@ -15,14 +15,15 @@ namespace ToDoListInfo.API.DBLayer.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [ForeignKey("IdOwner")]
         public int IdOwner { get; set; }
         public string EmailOwner { get; set; }
-        public string InfoPath { get; set; }
+        public string Text { get; set; }
 
-
+        [ForeignKey("IdTask")]
+        public int IdTask { get; set; }
 
     }
 }

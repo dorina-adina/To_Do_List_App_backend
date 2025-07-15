@@ -1,25 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
-using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ToDoListInfo.API.BusinessLayer.Models;
-using ToDoListInfo.API.Data_AccessLayer.Repos;
 using System.Drawing;
 using System.Drawing.Imaging;
-
+using ToDoListInfo.API.BusinessLayer.Models;
+using ToDoListInfo.API.Data_AccessLayer.Repos;
 
 
 namespace ToDoList.API.Presentation_Layer.Controllers
 {
     [ApiController]
-    //[Authorize]
     [Route("api/v{version:apiVersion}/lists")]
-    //[Route("api/[controller]")]
     [Asp.Versioning.ApiVersion(1)]
 
 
@@ -41,6 +32,8 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 throw new ArgumentNullException(nameof(logger));
         }
 
+
+        // se obtin task-urile
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoListDTO>>> GetLists()
         {
@@ -51,6 +44,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
+        // se obtine un task dupa id-ul dat
         [HttpGet("{ListId}", Name = "GetToDoList")]
         public async Task<ActionResult<ToDoListDTO>> GetToDoList(
             int ListId)
@@ -74,7 +68,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
-
+        // se obtine un task dupa id-ul user-ului dat
         [HttpGet("owner/{idOwner}", Name = "GetToDoListByOwner")]
         public async Task<ActionResult<IEnumerable<ToDoListDTO>>> GetToDoListByOwner(
             int idOwner)
@@ -98,6 +92,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             }
         }
 
+        // se adauga un task
         [HttpPost]
         public async Task<ActionResult> InsertToDoList(ToDoListForInsertDTO toDoList)
         {
@@ -107,14 +102,8 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
                 if (toDoList == null)
                 {
-                    return NotFound($"List is null");
+                    return NotFound("List is null");
                 }
-
-                //var listForInsert = _mapper.Map<ToDoListForInsertDTO, ToDoListInfo.API.DBLayer.Entities.ToDoList>(toDoList);
-
-                //var item = await _toDoListRepo.AddList(listForInsert);
-
-                //return NoContent();
 
                 var listForInsert = _mapper.Map<ToDoListForInsertDTO, ToDoListInfo.API.DBLayer.Entities.ToDoList>(toDoList);
 
@@ -132,22 +121,11 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
+        // se modifica un task
         [HttpPut("{Id}")]
         public async Task<ActionResult> UpdateToDoList(int Id,
             ToDoListForUpdateDTO toDoList)
         {
-            //var toDoListEntity = await _toDoListRepo.GetListAsync(Id);
-
-            //if (toDoListEntity == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var updatedList = _mapper.Map<ToDoListForUpdateDTO, ToDoListInfo.API.DBLayer.Entities.ToDoList>(toDoList);
-
-            //var item = await _toDoListRepo.UpdateList(Id, updatedList);
-
-            //return NoContent();
 
             try
             {
@@ -155,7 +133,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
                 if (toDoListEntity == null)
                 {
-                    return NotFound($"List is null");
+                    return NotFound("List is null");
                 }
 
                 var updatedList = _mapper.Map<ToDoListForUpdateDTO, ToDoListInfo.API.DBLayer.Entities.ToDoList>(toDoList);
@@ -172,6 +150,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             }
         }
 
+        // se sterge un task
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteToDoList(int Id)
         {
@@ -181,7 +160,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
                 if (toDoListEntity == null)
                 {
-                    return NotFound($"List is null");
+                    return NotFound("List is null");
                 }
 
                 _toDoListRepo.DeleteList(Id);
@@ -194,9 +173,9 @@ namespace ToDoList.API.Presentation_Layer.Controllers
             }
         }
 
-
+        // se incarca un fisier
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile(IFormFile file, int idOwner, string emailOwner, string text)
+        public async Task<IActionResult> UploadFile(IFormFile file, int idOwner, string emailOwner, string text, int idTask)
         {
             try
             {
@@ -205,44 +184,19 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                     return BadRequest("No file uploaded!");
                 }
 
+                string[] permittedExtensions = { "image/img", "image/jpg", "image/jpeg", "image/gif", "image/bmp", "image/jfif", "image/png" }; 
 
-
-                string[] permittedExtensions = { "image/img", "image/jpg", "image/jpeg", "image/gif", "image/bmp", "image/jfif" };
-
-                //var ext = Path.GetExtension(file.ContentType).ToLowerInvariant();
                 var ext = file.ContentType.ToLower();
 
-                if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+                if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))  // verificare extensie fisier
                 {
-                    return BadRequest("Wrong file type uploaded!");
+                    return BadRequest("Wrong file type uploaded");
                 }
 
-                var fileName = Path.GetFileName(file.FileName);
+                var fileName = Path.GetFileName(file.FileName);  // nume fisier
                 var filePath = Path.Combine(
                     Directory.GetCurrentDirectory(),
-                    $"_{fileName}");
-
-                //byte[] bytes = Encoding.ASCII.GetBytes(text);
-
-                byte[] bytes = Encoding.UTF8.GetBytes(text);
-
-                //string binary = string.Join("", bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
-
-                string binary = "";
-
-                binary += bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0'));
-
-
-                //string binary = "";
-                //foreach (char item in text)
-                //{
-                //    //text
-                //    byte[] bytes = Encoding.UTF8.GetBytes(text);
-                //    binary += bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
-                //}
-
-
-                //var bitmap = new Bitmap(fileName);
+                    $"_{fileName}");  // cale fisier
 
                 Bitmap bitmap;
                 using (var ms = new MemoryStream())
@@ -252,72 +206,55 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                     bitmap = new System.Drawing.Bitmap(ms);
                 }
 
-                int index = 0;
-                byte R, G, B;
+                text += "#END";  // se adauga la finalul mesajului de decodificat pentru a putea obtine mai usor mesajul la decodificare 
+
+                int index = 0;  // se va parcurge mesajul
+                byte R, G, B;  // canalele de culoare, rosu, verde, albastru
+                char c = '\0';
                 for (int i = 0; i < bitmap.Width; i++)
                 {
                     for (int j = 0; j < bitmap.Height; j++)
                     {
-                        if(index >= binary.Length)
+                        if(index >= text.Length)
                         {
                             break;
                         }
 
-                        Color pixel = bitmap.GetPixel(i, j);
+                        Color pixel = bitmap.GetPixel(i, j);  // se obtine pixelul, imaginea e parcursa de sus in jos, de la stanga spre dreapta
 
                         R = pixel.R;
                         G = pixel.G;
                         B = pixel.B;
 
-                        if (index < binary.Length)
+                        if (index < text.Length)
                         {
-                            R = (byte)((R & 0xFE) | (binary[index++] - '0'));
-                        }
-                        if (index < binary.Length)
-                        {
-                            G = (byte)((G & 0xFE) | (binary[index++] - '0'));
-                        }
-                        if (index < binary.Length)
-                        {
-                            B = (byte)((B & 0xFE) | (binary[index++] - '0'));
-                        }
+                            c = (char)text[index];  // caracterul c din text
+                        } 
+                        R = (byte)((R >> 3) << 3);  // se pregatesc ultimii biti, se fac 0 ultimii 3, 3, respectiv 2 biti
+                        G = (byte)((G >> 3) << 3);
+                        B = (byte)((B >> 2) << 2); 
 
-                        Color newPixel = Color.FromArgb(R, G, B);
-                        bitmap.SetPixel(i, j, newPixel);
+                        R += (byte)((c & 0b11100000) >> 5);  // se adauga informatia din caracterul c, informatia de pe bitii 7, 6, 5, shift la dreapta cu 5
+                        G += (byte)((c & 0b00011100) >> 2);  // informatia de pe bitii 4, 3, 2
+                        B += (byte)(c & 0b00000011);  //informatia de pe bitii 1, 0
+                        index++;
+
+                        Color newPixel = Color.FromArgb(R, G, B);  //noul pixel
+                        bitmap.SetPixel(i, j, newPixel);  //imaginea e actualizata cu noul pixel
 
                     }
                 }
 
-                using (MemoryStream mss = new MemoryStream())
+                using (MemoryStream mss = new MemoryStream())  //se converteste in format png
                 {
-                    bitmap.Save(filePath, ImageFormat.Jpeg);
+                    bitmap.Save(filePath, ImageFormat.Png);
                     mss.Seek(0, SeekOrigin.Begin);
-                    return Ok();
                 }
-
-                //var mss = new MemoryStream();
-                //bitmap.Save(mss, ImageFormat.Png);
-                //mss.Seek(0, SeekOrigin.Begin);
                 
 
-                var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath, idOwner, emailOwner, text);
+                var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath, idOwner, emailOwner, text, idTask);  //se salveaza fisierul
 
-                //return Ok(bitmap.GetPixel(0,0));
-
-
-                //var fileName = Path.GetFileName(file.FileName);
-                //var filePath = Path.Combine(
-                //    Directory.GetCurrentDirectory(),
-                //    $"_{fileName}");
-
-                //using (var stream = new FileStream(filePath, FileMode.Create))
-                //{
-                //    await file.CopyToAsync(stream);
-                //}
-
-                //var fileUpload = await _toDoListRepo.AddFileAsync(fileName, filePath, idOwner, emailOwner, text);
-
-                _logger.LogInformation("File {FileName} was uploaded succesfully!", fileName);
+                _logger.LogInformation($"File {fileName} was uploaded succesfully!");
 
                 return Ok(new { fileUpload.Name, fileUpload.Path });
             }
@@ -331,5 +268,126 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-    }
+
+        [HttpPost("download")]
+        public async Task<string> DownloadFile(IFormFile file)
+        {
+       
+            Bitmap bitmap;
+
+            using (var ms = new MemoryStream())
+            {
+                file.CopyToAsync(ms);
+                ms.Position = 0;
+                bitmap = new System.Drawing.Bitmap(ms);
+            }
+            string message = "";  // variabila in care se va salva mesajul
+            int index = 0;  
+            byte R, G, B;
+                for (int i = 0; i < bitmap.Width; i++)
+                {
+                    for (int j = 0; j < bitmap.Height; j++)
+                    {
+
+                        Color pixel = bitmap.GetPixel(i, j);  // se obtine pixelul
+
+                        R = pixel.R;
+                        G = pixel.G;
+                        B = pixel.B;
+
+                        R = (byte)(R & 0b00000111);  // se pastreaza ultimii 3, 3, respectiv 2 biti
+                        G = (byte)(G & 0b00000111);
+                        B = (byte)(B & 0b00000011);
+
+                        char c = (char)((R << 5) + (G << 2) + B);  // se formeaza caracterul
+                        if (c == 0 || c.CompareTo('#') == 0)  // verificare conditii
+                        {
+                            return message;
+                        }
+                        message += c;  // caracterul se adauga mesajului
+                    Color newPixel = Color.FromArgb(R, G, B);  
+                        bitmap.SetPixel(i, j, newPixel);  // se seteaza noul pixel
+
+                    }
+                }
+
+            return message;  // mesajul obtinut se returneaza
+
+        }
+
+        // se obtin fisierele
+        [HttpGet("files")]
+        public async Task<ActionResult<IEnumerable<UploadDTO>>> GetFiles()
+        {
+            var files = await _toDoListRepo.GetFiles();
+
+            return Ok(_mapper.Map<IEnumerable<ToDoListInfo.API.DBLayer.Entities.Upload>, IEnumerable<UploadDTO>>(files));
+
+
+        }
+
+        // se obtin fisierele dupa id0ul user-ului
+        [HttpGet("files/ownerFiles/{idOwner}", Name = "GetFilesByOwner")]
+        public async Task<ActionResult<IEnumerable<UploadDTO>>> GetFilesByOwner(
+            int idOwner)
+        {
+            try
+            {
+                var files = await _toDoListRepo
+                    .GetFilesCreatedByAsync(idOwner);
+
+                if (files == null)
+                {
+                    return NotFound($"Files with ID {idOwner} not exist");
+                }
+
+                return Ok(_mapper.Map<IEnumerable<UploadDTO>>(files));
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Server error");
+            }
+        }
+        
+        // se obtine fisierul dupa id
+        [HttpGet("files/{fileId}", Name = "GetFileById")]
+        public async Task<ActionResult> GetFileById(int fileId)
+        {
+
+            try
+            {
+                var result = await _toDoListRepo
+                    .GetFileById(fileId);
+
+                if (result == null)
+                {
+                    return NotFound($"File with ID {fileId} not exist");
+                }
+
+
+                var file = _mapper.Map<UploadDTO>(result);
+
+                var path = file.Path;
+
+                if (!System.IO.File.Exists(path))
+                    return NotFound();
+
+                string MimeType = "image/jpg";
+
+                var fileName = file.Name;
+
+
+                var fileBytes = System.IO.File.ReadAllBytes(path);
+
+                return File(fileBytes, MimeType, fileName);  // va fi trimis sub forma de blob
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Server error");
+            }
+
+            }
+        }
 }

@@ -20,9 +20,12 @@ namespace ToDoListInfo.API.Data_AccessLayer.Repos
 
         Task<bool> SaveChangesAsync();
 
-        Task<Upload> AddFileAsync(string fileName, string filePath, int idOwner, string emailOwner, string infoPath);
+        Task<Upload> AddFileAsync(string fileName, string filePath, int idOwner, string emailOwner, string infoPath, int idTask);
 
+        Task<IEnumerable<Upload>> GetFiles();
 
+        Task<IEnumerable<Upload>> GetFilesCreatedByAsync(int idOwner);
+        Task<Upload> GetFileById(int id);
 
 
 

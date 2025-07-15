@@ -9,11 +9,14 @@ namespace ToDoListInfo.API.BusinessLayer.Models
 {
     public class UploadDTO
     {
-
-        [ForeignKey("IdOwner")]
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public string CreatedDate { get; set; }
         public int IdOwner { get; set; }
         public string EmailOwner { get; set; }
-        public string InfoPath { get; set; }
+        public string Text { get; set; }
+        public int IdTask { get; set; }
 
     }
 }

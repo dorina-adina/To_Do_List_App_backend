@@ -1,26 +1,18 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using System.Security.Claims;
 using ToDoListInfo.API.BusinessLayer.Models;
 using ToDoListInfo.API.Data_AccessLayer.Repos;
-using Google.Apis.Auth.AspNetCore3;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v3;
-using Google.Apis.Services;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
-using Microsoft.AspNetCore.Identity;
-using Google.Apis.Drive.v3.Data;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.Identity.Client;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace ToDoList.API.Presentation_Layer.Controllers
 {
 
     [ApiController]
-    //[Authorize]
     [Route("api/v{version:apiVersion}/users")]
-    //[Route("api/[controller]")]
     [Asp.Versioning.ApiVersion(1)]
 
 
@@ -29,11 +21,7 @@ namespace ToDoList.API.Presentation_Layer.Controllers
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly ILogger<ListsControllers> _logger;
-        //private readonly string _googleUserInfoUrl = configuration["Authorization:Google:UserInfoUrl"]!;
-        //private readonly SignInManager<User> _signInManager;
-
-
-
+       
         public UsersControllers(IUserRepo userRepo, IMapper mapper, ILogger<ListsControllers> logger)
         {
             _userRepo = userRepo ??
@@ -42,10 +30,9 @@ namespace ToDoList.API.Presentation_Layer.Controllers
                 throw new ArgumentNullException(nameof(mapper));
             _logger = logger ??
                 throw new ArgumentNullException(nameof(logger));
-            //_signInManager = signInManager ??
-            //    throw new ArgumentNullException(nameof(signInManager));
         }
 
+        // se obtin userii
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
@@ -55,145 +42,200 @@ namespace ToDoList.API.Presentation_Layer.Controllers
 
         }
 
+        // se adauga un user
         [HttpPost]
         public async Task<ActionResult<UserDTO>> InsertUser(UserInsertDTO user)
         {
-            if (user == null)
+            try {
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var existsEmail = await _userRepo.GetUserAsync(user.Email);
+
+                if (existsEmail != null)
+                {
+                    return Conflict(new { message = "Email is already registered!" });
+
+                }
+
+                var userToAdd = _mapper.Map<ToDoListInfo.API.DBLayer.Entities.Users>(user);
+
+
+                _userRepo.AddUser(userToAdd);
+
+                return Ok(new { message = "Registered successfully!" });
+
+            }catch(Exception ex)
             {
-                return NotFound();
-            }
-
-            var existsEmail = await _userRepo.GetUserAsync(user.Email);
-
-            if (existsEmail != null)
-            {
-                return Conflict(new { message = "Email is already registered!" });
+                return StatusCode(500, "Server error");
 
             }
-
-            var userToAdd = _mapper.Map<ToDoListInfo.API.DBLayer.Entities.Users>(user);
-
-
-            _userRepo.AddUser(userToAdd);
-
-            //await _userRepo.SaveChangesAsync();
-
-            return Ok(new { message = "Registration successful!" });
-
         }
 
 
+        // se obtine un user dupa email
         [HttpGet("{emailUser}")]
-        public async Task<ActionResult<UserDTO>> GetUser(
-            string emailUser)
+        public async Task<ActionResult<UserDTO>> GetUser(string emailUser)
         {
-
-            var user = await _userRepo.GetUserAsync(emailUser);
-
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = await _userRepo.GetUserAsync(emailUser);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(_mapper.Map<UserDTO>(user));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Server error");
             }
 
-            return Ok(_mapper.Map<UserDTO>(user));
+            }
 
-        }
-
+        // se verifica daca un user este admin
         [HttpGet("isAdmin/{emailUser}", Name = "Exist")]
         public async Task<ActionResult> IsAdmin(string emailUser)
         {
-            var user = await _userRepo.IsAdminAsync(emailUser);
-
-            if (user == false)
+            try
             {
-                return Ok(new { flag = false, message = "User is not an admin!" });
-            }
+                var user = await _userRepo.IsAdminAsync(emailUser);
 
-            return Ok(new { flag = true, message = "User is an admin!" });
+                if (user == false)
+                {
+                    return Ok(new { flag = false, message = "User is not an admin!" });
+                }
+
+                return Ok(new { flag = true, message = "User is an admin!" });
+            }catch(Exception ex)
+            {
+                return StatusCode(500, "Server error");
+
+            }
         }
 
-
-        [HttpPost("Login")]
+        // login clasic
+        [HttpPost("login")]
         public async Task<ActionResult<LoginDTO>> Login(LoginDTO user)
         {
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                if (user == null)
+                {
+                    return NotFound();
+                }
 
-            var existsUser = await _userRepo.GetUserAsync(user.Email);
+                var existsUser = await _userRepo.GetUserAsync(user.Email);
 
-            if (existsUser == null)
+                if (existsUser == null)
+                {
+                    return NotFound(new { message = "Email is not registered!" });
+
+                }
+
+                bool verification = BCrypt.Net.BCrypt.EnhancedVerify(user.Pass, existsUser.Pass);
+
+
+
+                if (verification)
+                {
+                    return Ok(new { message = "Login successful!" });
+
+                }
+
+                return Unauthorized(new { message = "Password is incorrect!" });
+            }catch(Exception ex)
             {
-                return NotFound(new { message = "Email is not registered!" });
+                return StatusCode(500, "Server error");
 
             }
-
-            bool verification = BCrypt.Net.BCrypt.EnhancedVerify(user.Pass, existsUser.Pass);
-
-
-
-            if (verification)
-            {
-                return Ok(new { message = "Login successful!" });
-
-            }
-
-            return Unauthorized(new { message = "Password is incorrect!" });
-
 
         }
 
-        //[GoogleScopedAuthorize(DriveService.ScopeConstants.DriveReadonly)]
-        //public async Task<ActionResult> DriveFileList([FromServices] IGoogleAuthProvider auth)
-        //{
-        //    GoogleCredential cred = await auth.GetCredentialAsync();
-        //    var service = new DriveService(new BaseClientService.Initializer
-        //    {
-        //        HttpClientInitializer = cred
-        //    });
-        //    var files = await service.Files.List().ExecuteAsync();
-        //    var fileNames = files.Files.Select(x => x.Name).ToList();
-        //    return View(fileNames);
-        //}
+        //login cu google
+        [HttpGet("LoginGoogle")]
+        public async Task LoginGoogle()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("GoogleResponse")
+                });
+        }
 
-        //private ActionResult View(List<string> fileNames)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [HttpGet("GoogleResponse")]
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-        //public IActionResult ExternalLogin(string provider, string returnUrl = "")
-        //{
-        //    var redirectUrl = Url.Action("ExternalLoginCallback", "Authentication", new { ReturnUrl = returnUrl });
+            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
-        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var existsUser = await _userRepo.GetUserAsync(email);  // se verifica daca exista user-ul
 
-        //    return new ChallengeResult(provider, properties);
-        //}
+            if(existsUser == null)
+            {
+                UserInsertDTO user = new UserInsertDTO();
+                user.Name = name;
+                user.PhoneNr = "null";
+                user.Email = email;
+                user.IsAdmin = false;
+                user.Pass = "null";
 
-        //[HttpPost("LoginGoogle")]
-        //public IResult LoginGoogle([FromQuery] string returnUrl, LinkGenerator linkGenerator, SignInManager<User> signInManager, HttpContext context)
-        //{
-        //    var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", linkGenerator.GetPathByName(context, "GoogleLoginCallback") + $"?returnUrl={returnUrl}");
+                var userToAdd = _mapper.Map<ToDoListInfo.API.DBLayer.Entities.Users>(user);  // daca nu, este adaugat
 
-        //    return Results.Challenge(properties, ["Google"]);
+                _userRepo.AddUser(userToAdd);
+            }
+            var redirectUrl = $"http://localhost:5173/google-callback?email={Uri.EscapeDataString(email)}";
 
-        //}
+            return Redirect(redirectUrl);
 
-        //[HttpPost("LoginGoogleCallback")]
-        //public async Task<IResult> LoginGoogleCallback([FromQuery] string returnUrl, HttpContext context, IUserRepo userRepo)
-        //{
-        //    var result = await context.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+        }
 
-        //    if (!result.Succeeded)
-        //    {
-        //        return Results.Unauthorized();
-        //    }
+        // schimbare parola
+        [HttpPost("changePassword")]
+        public async Task<ActionResult> ChangePassword(LoginDTO user)
+        {
 
-        //    await userRepo.LoginGoogleAsync(result.Principal);
+            try
+            {
+                if(user == null)
+                {
+                    return NotFound();
+                }
 
-        //    return Results.Redirect(returnUrl);
-        //}
+                var userExist = await _userRepo.GetUserAsync(user.Email);
+
+                if (userExist == null)
+                {
+                    return NotFound($"Invalid email");
+                }
+
+                var newPass = user.Pass;
+                var email = user.Email;
+
+                var userChanged = await _userRepo.ChangePasswordUser(newPass, email);
+
+                return Ok(userChanged);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest();
+
+            }
+        }
 
     }
 }
