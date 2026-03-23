@@ -3,6 +3,16 @@ The layers:
 - DB Layer
   
 It is the layer that defines the data model and database configuration, represents database structure. The layer includes DB Context, Entities, Migrations.
+
+The application uses Entity Framework Core (EF Core) as the ORM for database communication.
+EF Core is responsible for:
+
+- Mapping entities to database tables
+- Executing CRUD operations
+- Managing relationships between entities
+- Handling database migrations
+
+All database interactions are performed through the DbContext.
 - Data Acess Layer
 
 This layer handles all database operations and contains the Repositories and the Helpers. It uses DbContext and entities from DB Layer and encapsulates operations. Through Helpers it is managed the conversion of date and time from DateTime format to a more user friendly format. 
@@ -48,3 +58,4 @@ Download process
 3. The user choose one;
 4. The hidden message is extracted from the image;
 5. The decoded message is returned to the user.
+
