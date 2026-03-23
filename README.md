@@ -1,4 +1,6 @@
-This project represents the backend of To-Do List App. Shortly, the app helps the user to keep his tasks organized and secure. It was built with ASP.Net Core Web API following SOLID principles and a 4-layer approach. Each layer has a clear responsibility and dependency direction. 
+# This project represents the backend of the To-Do List App. 
+
+Shortly, the app helps the user to keep his tasks organized and secure. It was built with ASP.Net Core Web API following SOLID principles and a 4-layer approach. Each layer has a clear responsibility and dependency direction. 
 The layers:
 - DB Layer
   
