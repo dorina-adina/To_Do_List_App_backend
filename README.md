@@ -1,4 +1,4 @@
-# This project represents the backend of the To-Do List App. 
+# This project represents the backend of the To-Do List App
 
 Shortly, the app helps the user to keep his tasks organized and secure. It was built with ASP.Net Core Web API following SOLID principles and a 4-layer approach. Each layer has a clear responsibility and dependency direction. 
 The layers:
@@ -42,7 +42,7 @@ A user can view his tasks, create a new one, update an existing one or delete on
 
 **Upload and Download**
 
-A user can keep his information secret by hidding them into an image.The application allows users to upload images and optionally hide a secret message inside the image.
+A user can keep his information secret by hidding them into an image.The application allows users to upload images and hide a secret message inside the image.
 When the image is downloaded, the hidden message can be extracted.
 
 Upload process 
